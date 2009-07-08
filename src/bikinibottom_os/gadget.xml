@@ -14,6 +14,7 @@
       <head>
         <link rel="stylesheet" href="http://localhost:8080/bikinibottom_os/css/common.css" type="text/css" charset="utf-8" />
         <link rel="stylesheet" href="http://localhost:8080/bikinibottom_os/css/home.css" type="text/css" charset="utf-8" />
+        <script src="http://ajax.googleapis.com/ajax/libs/prototype/1.6.0.3/prototype.js" type="text/javascript" charset="utf-8"></script>
         <script src="http://localhost:8080/bikinibottom_os/js/common.js" type="text/javascript" charset="utf-8"></script>
         <script src="http://localhost:8080/bikinibottom_os/js/home.js" type="text/javascript" charset="utf-8"></script>        
       </head>
@@ -23,7 +24,15 @@
           _tabs = new gadgets.TabSet(__MODULE_ID__);
         </script>
         
-        <div id="new" style="display: none;">New</div>
+        <div id="new" style="display: none;">
+          <form id="message-form">
+            <input type="text" name="subject" value="Some title" /><br />
+            <select id="recipient" name="recipient" disabled="disabled">
+              <option value="_default_">-- Please select --</option>
+            </select><br />
+            <input type="submit" name="send" value="Send" /><br />
+          </form>
+        </div>
         <div id="inbox" style="display: none;">Inbox</div>
         <div id="outbox" style="display: none;">Outbox</div>
         
