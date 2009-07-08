@@ -14,8 +14,8 @@
       <head>
         <link rel="stylesheet" href="http://localhost:8080/bikinibottom_os/common.css" type="text/css" charset="utf-8" />
         <link rel="stylesheet" href="http://localhost:8080/bikinibottom_os/home.css" type="text/css" charset="utf-8" />
-        <script src="http://localhost:8080/bikinibottom_os/common.js" type="text/javascript" charset="utf-8"></script>
-        <script src="http://localhost:8080/bikinibottom_os/home.js" type="text/javascript" charset="utf-8"></script>
+        <script src="http://localhost:8080/bikinibottom_os/js/common.js" type="text/javascript" charset="utf-8"></script>
+        <script src="http://localhost:8080/bikinibottom_os/js/home.js" type="text/javascript" charset="utf-8"></script>
       </head>
       <body id="home">
         <script type="text/javascript" charset="utf-8">
@@ -38,12 +38,18 @@
         
         <div id="flash-viewer">
             here comes the flash movie
-        </div>
-        
+        </div>        
         <script type="text/javascript">
           gadgets.flash.embedFlash("http://localhost:8080/bikinibottom_os/liverecord.swf", "flash-viewer", 10, {width: 300, height: 250});
           gadgets.window.adjustHeight();
         </script>
+                
+        <script type="text/javascript" src="http://localhost:8080/bikinibottom_os/js/dispatching.js"></script>        
+        <script type="text/javascript">
+          var Dispatcher    = new DispatchingSystem('http://0.0.0.0:5000', , config.user_id);
+          Dispatcher.
+        </script>
+        
         
       </body>
     </html>
