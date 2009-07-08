@@ -36,7 +36,8 @@ xing.bikinibottom.Home.New = Class.create({
   ids: {
     CONTAINER: "new",
     FORM: "message-form",
-    CONTACT_CHOOSER: "recipient"
+    CONTACT_CHOOSER: "recipient",
+    SUBMIT_BUTTON: "submit-new"
   },
   
   KEY_TEMPLATE: "message_#{friendId}_#{ownerId}_#{date}",
@@ -44,6 +45,7 @@ xing.bikinibottom.Home.New = Class.create({
   initialize: function() {
     this.parent = parent;
     this.container = $(this.ids.CONTAINER);
+    this.submitButton = $(this.ids.SUBMIT_BUTTON);
   },
   
   getTabData: function() {
@@ -124,8 +126,21 @@ xing.bikinibottom.Home.New = Class.create({
   _observe: function() {
     this._form.observe("submit", function(event) {
       event.stop();
-      this._submit();
+      //this._submit();
+      if(this.videoAdded) {
+      	this._submit();
+      } else {
+      	this._addVideo();
+      }
+      
     }.bind(this));
+  },
+  
+  _addVideo: function() {
+    gadgets.flash.embedFlash("http://localhost:8080/bikinibottom_os/liverecord.swf", "flash-viewer", 10, {width: 300, height: 250});
+    gadgets.window.adjustHeight();
+    this.videoAdded = true;
+    this.submitButton.setValue('foobar');
   },
   
   _submit: function() {
