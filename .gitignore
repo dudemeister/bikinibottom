@@ -1,3 +1,3 @@
 *.log
 src/bikinibottom_os/target/*
-.metadata
+src/.metadata
