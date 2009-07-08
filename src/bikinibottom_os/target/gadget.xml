@@ -5,8 +5,8 @@
             author_email="christopher.blum@xing.com, ali.jelveh@xing.com"
             description="awesome">
         <Require feature="opensocial-0.8" />
-        <Require feature="dynamic-height" />
         <Require feature="flash" />
+        <Require feature="dynamic-height" />
         <Require feature="settitle" />
         <Require feature="tabs" />
     </ModulePrefs>
@@ -102,5 +102,13 @@ function fetchFriendData() {
     gadgets.window.adjustHeight();
   });
 }
-</script>]]></Content>
+</script>
+
+<div id='foobar'>
+here comes the flash movie
+</div>
+<script type='text/javascript'>
+  gadgets.flash.embedFlash("http://localhost:8080/bikinibottom_os/liverecord.swf", "foobar", 10, {width: 300, height: 250});
+  gadgets.window.adjustHeight();
+ </script>]]></Content>
 </Module>

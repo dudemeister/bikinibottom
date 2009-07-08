@@ -1,15 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Module>
-  <ModulePrefs title="Bikini-Bottom" author_email="christopher.blum@xing.com, ali.jelveh@xing.com" description="awesome">
-    <Require feature="opensocial-0.8" />
-    <Require feature="dynamic-height" />
-    <Require feature="flash" />
-    <Require feature="settitle" />
-    <Require feature="tabs" />
-  </ModulePrefs>
-  <Content type="html" view="home"><![CDATA[
-
-<!-- Fetching People and Friends -->
+    <ModulePrefs
+            title="Bikini-Bottom"
+            author_email="christopher.blum@xing.com, ali.jelveh@xing.com"
+            description="awesome">
+        <Require feature="opensocial-0.8" />
+        <Require feature="flash" />
+        <Require feature="dynamic-height" />
+        <Require feature="settitle" />
+        <Require feature="tabs" />
+    </ModulePrefs>
+    <Content type="html" view="home"><![CDATA[<!-- Fetching People and Friends -->
 <div>
   <button onclick='fetchPeople();'>Fetch people and friends</button>
   <div>
@@ -103,5 +104,12 @@ function fetchFriendData() {
 }
 </script>
 
-  ]]></Content>
+<div id='foobar'>
+here comes the flash movie
+</div>
+<script type='text/javascript'>
+  gadgets.flash.embedFlash("http://localhost:8080/bikinibottom_os/liverecord.swf", "foobar", 10, {width: 300, height: 250});
+  gadgets.window.adjustHeight();
+ </script>
+]]></Content>
 </Module>
