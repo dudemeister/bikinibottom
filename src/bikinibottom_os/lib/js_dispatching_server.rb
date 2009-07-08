@@ -2,6 +2,7 @@
 
 require 'rubygems'
 require 'eventmachine'
+require 'json'
 
 # this is here to make sure environment.rb doens't recreate the EventMachine Loop
 RUN_FROM_DISPATCHER = true
@@ -26,6 +27,8 @@ module JsDispatchingServer
         bind_socket_to_queues
       end
     else
+      data = JSON.parse(data.chomp("\000"))
+      log(data)
       send_data(data)
     end
     

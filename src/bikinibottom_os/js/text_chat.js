@@ -9,9 +9,6 @@ xing.bikinibottom.Home.TextChat = Class.create({
   initialize: function(parent) {
     this.parent = parent;
     this.container = $(this.ids.CONTAINER);
-    this._initElements();
-    this._loadData();
-    this._observe();
   },
   
   getTabData: function() {
@@ -23,6 +20,18 @@ xing.bikinibottom.Home.TextChat = Class.create({
     };
   },
     
+  _loadTab: function() {
+    if (this._tabLoaded) {
+      return;
+    }
+    
+    this._initElements();
+    this._loadData();
+    this._observe();
+    
+    this._tabLoaded = true;
+  },
+  
   _initElements: function() {
     this._form = $(this.ids.FORM);
     this._contactChooser = $(this.ids.CONTACT_CHOOSER);
@@ -98,9 +107,6 @@ xing.bikinibottom.Home.TextChat = Class.create({
       console.log('Sending data: ' + $H(data).toJSON());
       Dispatcher.sendMessage($H(data).toJSON());
     }.bind(this));
-  },
-  
-  _loadTab: function() {
-    
   }
+  
 });
