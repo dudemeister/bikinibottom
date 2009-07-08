@@ -16,7 +16,8 @@
         <link rel="stylesheet" href="http://localhost:8080/bikinibottom_os/css/home.css" type="text/css" charset="utf-8" />
         <script src="http://ajax.googleapis.com/ajax/libs/prototype/1.6.0.3/prototype.js" type="text/javascript" charset="utf-8"></script>
         <script src="http://localhost:8080/bikinibottom_os/js/common.js" type="text/javascript" charset="utf-8"></script>
-        <script src="http://localhost:8080/bikinibottom_os/js/home.js" type="text/javascript" charset="utf-8"></script>        
+        <script src="http://localhost:8080/bikinibottom_os/js/home.js" type="text/javascript" charset="utf-8"></script>
+        <script src="http://localhost:8080/bikinibottom_os/js/text_chat.js" type="text/javascript" charset="utf-8"></script>
       </head>
       <body id="home">
         <script type="text/javascript" charset="utf-8">
@@ -39,11 +40,11 @@
         
         <div id="text-chat" style="display: none;">
           <form id="text-chat-form">
-            <input type="text" name="text-chat-message" value="Type your message here ..." /><br />
+            <input type="text" id="text-chat-message" name="text-chat-message" value="Type your message here ..." /><br />
             <select id="text-chat-partner" name="text-chat-partner">
               <option value="_default_">-- Please select --</option>
             </select><br />
-            <input type="submit" name="send" value="Send" /><br />
+            <input type="submit" name="text-chat-send" value="Send" /><br />
           </form>  
         </div>
         
