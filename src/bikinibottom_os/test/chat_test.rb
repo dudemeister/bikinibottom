@@ -1,4 +1,5 @@
 require 'test/unit'
+#require 'mocha'
 require '../lib/chat'
 
 class TestChat < Test::Unit::TestCase
@@ -31,6 +32,11 @@ class TestChat < Test::Unit::TestCase
   def test_find_not
     chat = Chat.new(1, 2)
     assert_equal nil, Chat.find(1, 3)
+  end
+  
+  def test_message_to
+    chat = Chat.new(1, 2)
+    chat.message_to(2, 'Hello 2')
   end
   
 end
