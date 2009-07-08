@@ -33,8 +33,19 @@
             <input type="submit" name="send" value="Send" /><br />
           </form>
         </div>
-        <div id="text-chat" style="display: none;">Chat</div>
+        
+        <div id="text-chat" style="display: none;">
+          <form id="text-chat-form">
+            <input type="text" name="text-chat-message" value="Type your message here ..." /><br />
+            <select id="text-chat-partner" name="text-chat-partner">
+              <option value="_default_">-- Please select --</option>
+            </select><br />
+            <input type="submit" name="send" value="Send" /><br />
+          </form>  
+        </div>
+        
         <div id="inbox" style="display: none;">Inbox</div>
+        
         <div id="outbox" style="display: none;"></div>
         
         <script type="text/javascript" charset="utf-8">
