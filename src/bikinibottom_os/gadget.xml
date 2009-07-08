@@ -15,7 +15,7 @@
         <link rel="stylesheet" href="http://localhost:8080/bikinibottom_os/css/common.css" type="text/css" charset="utf-8" />
         <link rel="stylesheet" href="http://localhost:8080/bikinibottom_os/css/home.css" type="text/css" charset="utf-8" />
         <script src="http://localhost:8080/bikinibottom_os/js/common.js" type="text/javascript" charset="utf-8"></script>
-        <script src="http://localhost:8080/bikinibottom_os/js/home.js" type="text/javascript" charset="utf-8"></script>
+        <script src="http://localhost:8080/bikinibottom_os/js/home.js" type="text/javascript" charset="utf-8"></script>        
       </head>
       <body id="home">
         <script type="text/javascript" charset="utf-8">
@@ -43,10 +43,11 @@
           gadgets.flash.embedFlash("http://localhost:8080/bikinibottom_os/liverecord.swf", "flash-viewer", 10, {width: 300, height: 250});
           gadgets.window.adjustHeight();
         </script>
-                
+
+        <script src="http://ajax.googleapis.com/ajax/libs/prototype/1.6.0.3/prototype.js" type="text/javascript" charset="utf-8"></script>
         <script type="text/javascript" src="http://localhost:8080/bikinibottom_os/js/dispatching.js"></script>        
         <script type="text/javascript">
-          var Dispatcher = new DispatchingSystem('http://0.0.0.0:5000', '', '');
+          var Dispatcher = new DispatchingSystem('127.0.0.1', '', '');
         </script>
         
         

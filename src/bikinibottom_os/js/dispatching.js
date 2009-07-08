@@ -1,4 +1,7 @@
 function DispatchingSystem(server, user_auth_token, user_id) {
+  if (!server.match(/^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$/)) { 
+    throw 'Server IP for DispatchingSystem must be IPv4, without protocol.'
+  }
   // this.socket = socket;
   this.server = server;
   this.user_auth_token = user_auth_token;
@@ -10,9 +13,8 @@ DispatchingSystem.prototype = {
   
   // todo: create socket doesn't look as good as it should/could ;)
   "createSocket": function() {
-    var socket = $('<!-- MESSAGING SOCKET --><object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="http://fpdownload.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=8,0,0,0" width="1" height="1" align="middle"><param name="allowScriptAccess" value="sameDomain"><param name="movie" value="http://localhost:8080/socket.swf"><param name="quality" value="high"><param name="bgcolor" value="#FFFFFF">        <embed id="flash_socket" src="http://localhost:8080/socket.swf" quality="high" bgcolor="#FFFFFF" width="20" height="20" name="flash_socket" align="middle" allowScriptAccess="sameDomain" type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/go/getflashplayer">    </object><!-- END OF MESSAGING SOCKET -->');
-    console.log(socket);
-    $('body').append(socket);
+    var socket_html = '<object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="http://fpdownload.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=8,0,0,0" width="1" height="1" align="middle"><param name="allowScriptAccess" value="sameDomain"><param name="movie" value="/bikinibottom_os/socket.swf"><param name="quality" value="high"><param name="bgcolor" value="#FFFFFF">        <embed id="flash_socket" src="/bikinibottom_os/socket.swf" quality="high" bgcolor="#FFFFFF" width="20" height="20" name="flash_socket" align="middle" allowScriptAccess="sameDomain" type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/go/getflashplayer">    </object>';
+    Element.insert(document.body, socket_html);
     this.socket = document.getElementById('flash_socket');
   },
   
@@ -23,8 +25,8 @@ DispatchingSystem.prototype = {
     // was the flash socket
     this.socket = document.getElementById('flash_socket')
     this.connectSocket();
-    $(window).bind('beforeunload', function(){
-      this.socket.close()
+    window.bind('beforeunload', function(){
+      this.socket.close();
     })
   },
     
@@ -37,7 +39,7 @@ DispatchingSystem.prototype = {
     // doing this because a new socket has been opened after the initial opening (flash does that for policy handling) 
     // and the first response is a policy response by default
     this.sendMessage('foo', true);
-    this.authenticateUser();
+    //this.authenticateUser();
   },
 
   "authenticateUser": function() {
@@ -101,3 +103,5 @@ DispatchingSystem.prototype = {
   }
   
 };
+
+// $$('iframe')[0].contentWindow.Dispatcher.socket.connectSocket()
