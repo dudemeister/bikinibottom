@@ -30,7 +30,7 @@
             <select id="recipient" name="recipient">
               <option value="_default_">-- Please select --</option>
             </select><br />
-            <input type="submit" name="send" value="Send" /><br />
+            <input type="submit" name="add_video" value="Add Video" /><br />
           </form>
         </div>
         <div id="text-chat" style="display: none;">Chat</div>
