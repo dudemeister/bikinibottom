@@ -23,7 +23,7 @@ xing.bikinibottom.Home = {
   
   _initSubModules: function() {
     this._submodules = {};
-    $w("New Inbox Outbox").each(function(moduleName) {
+    $w("TextChat New Inbox Outbox").each(function(moduleName) {
       this._submodules[moduleName] = new this[moduleName](this);
     }.bind(this));
   }
@@ -171,6 +171,31 @@ xing.bikinibottom.Home.Outbox = Class.create({
       name: "Outbox", // [RES]
       contentContainer: this.container,
       tooltip: "Sent messages",  // [RES]
+      callback: this._loadTab.bind(this)
+    };
+  },
+  
+  _loadTab: function() {
+    
+  }
+});
+
+
+xing.bikinibottom.Home.TextChat = Class.create({
+  ids: {
+    CONTAINER: "text-chat"
+  },
+  
+  initialize: function(parent) {
+    this.parent = parent;
+    this.container = $(this.ids.CONTAINER);
+  },
+  
+  getTabData: function() {
+    return {
+      name: "Text-Chat", // [RES]
+      contentContainer: this.container,
+      tooltip: "Chat", // [RES]
       callback: this._loadTab.bind(this)
     };
   },

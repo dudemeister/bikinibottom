@@ -33,6 +33,7 @@
             <input type="submit" name="send" value="Send" /><br />
           </form>
         </div>
+        <div id="text-chat" style="display: none;">Chat</div>
         <div id="inbox" style="display: none;">Inbox</div>
         <div id="outbox" style="display: none;">Outbox</div>
         
