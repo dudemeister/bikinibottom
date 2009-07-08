@@ -12,8 +12,8 @@
       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
     <html xmlns="http://www.w3.org/1999/xhtml">
       <head>
-        <link rel="stylesheet" href="http://localhost:8080/bikinibottom_os/common.css" type="text/css" charset="utf-8" />
-        <link rel="stylesheet" href="http://localhost:8080/bikinibottom_os/home.css" type="text/css" charset="utf-8" />
+        <link rel="stylesheet" href="http://localhost:8080/bikinibottom_os/css/common.css" type="text/css" charset="utf-8" />
+        <link rel="stylesheet" href="http://localhost:8080/bikinibottom_os/css/home.css" type="text/css" charset="utf-8" />
         <script src="http://localhost:8080/bikinibottom_os/js/common.js" type="text/javascript" charset="utf-8"></script>
         <script src="http://localhost:8080/bikinibottom_os/js/home.js" type="text/javascript" charset="utf-8"></script>
       </head>
