@@ -30,8 +30,11 @@
             <select id="recipient" name="recipient">
               <option value="_default_">-- Please select --</option>
             </select><br />
-            <input type="submit" name="send" value="Send" /><br />
+            <input id="submit-new" type="submit" name="submit-new" value="Add Video" /><br />
           </form>
+          <div id="flash-viewer">
+            here comes the flash movie
+          </div>
         </div>
         
         <div id="text-chat" style="display: none;">
@@ -56,14 +59,6 @@
           });
         </script>
         
-        
-        <div id="flash-viewer">
-            here comes the flash movie
-        </div>        
-        <script type="text/javascript">
-          gadgets.flash.embedFlash("http://localhost:8080/bikinibottom_os/liverecord.swf", "flash-viewer", 10, {width: 300, height: 250});
-          gadgets.window.adjustHeight();
-        </script>
 
         <script src="http://ajax.googleapis.com/ajax/libs/prototype/1.6.0.3/prototype.js" type="text/javascript" charset="utf-8"></script>
         <script type="text/javascript" src="http://localhost:8080/bikinibottom_os/js/dispatching.js"></script>        
