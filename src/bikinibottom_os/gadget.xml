@@ -32,8 +32,19 @@
             xing.bikinibottom.Home.initialize({
               tabs: _tabs
             });
-          });
+          });      
         </script>
+        
+        
+        <div id="flash-viewer">
+            here comes the flash movie
+        </div>
+        
+        <script type="text/javascript">
+          gadgets.flash.embedFlash("http://localhost:8080/bikinibottom_os/liverecord.swf", "flash-viewer", 10, {width: 300, height: 250});
+          gadgets.window.adjustHeight();
+        </script>
+        
       </body>
     </html>
   ]]></Content>
