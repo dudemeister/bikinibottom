@@ -46,8 +46,7 @@
                 
         <script type="text/javascript" src="http://localhost:8080/bikinibottom_os/js/dispatching.js"></script>        
         <script type="text/javascript">
-          var Dispatcher    = new DispatchingSystem('http://0.0.0.0:5000', , config.user_id);
-          Dispatcher.
+          var Dispatcher = new DispatchingSystem('http://0.0.0.0:5000', '', '');
         </script>
         
         
