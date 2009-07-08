@@ -39,6 +39,8 @@ xing.bikinibottom.Home.New = Class.create({
     CONTACT_CHOOSER: "recipient"
   },
   
+  KEY_TEMPLATE: "message_#{friendId}_#{ownerId}_#{date}",
+  
   initialize: function() {
     this.parent = parent;
     this.container = $(this.ids.CONTAINER);
@@ -68,16 +70,18 @@ xing.bikinibottom.Home.New = Class.create({
   _initElements: function() {
     this._form = $(this.ids.FORM);
     this._contactChooser = $(this.ids.CONTACT_CHOOSER);
+    
+    this._form.getElements().invoke("disable");
   },
   
   _loadData: function() {
-    var req, friendsSpec, friendsParams, viewerSpec, viewerParams;
+    var req, friendsSpec, friendsParams, ownerSpec, ownerParams;
     
     req = opensocial.newDataRequest();
     
-    viewerSpec = opensocial.IdSpec.PersonId.VIEWER;
-    viewerParams = {};
-    req.add(req.newFetchPersonRequest(viewerSpec, viewerParams), "viewer");
+    ownerSpec = opensocial.IdSpec.PersonId.OWNER;
+    ownerParams = {};
+    req.add(req.newFetchPersonRequest(ownerSpec, ownerParams), "owner");
     
     friendsSpec = opensocial.newIdSpec({ userId: "VIEWER", groupId: "FRIENDS" });
     friendsParams = {};
@@ -88,14 +92,17 @@ xing.bikinibottom.Home.New = Class.create({
   },
   
   _dataCallback: function(data) {
-    this._viewer = data.get("viewer").getData();
+    this._owner = data.get("owner").getData();
     this._friends = data.get("friends").getData();
     
     this._renderRecipients();
+    
+    this._form.getElements().invoke("enable");
   },
   
   _renderRecipients: function() {
     var optionTemplate, optionHtml, html;
+    
     optionTemplate = '<option value="#{id}">#{displayName}</option>';
     html = [];
     
@@ -110,7 +117,8 @@ xing.bikinibottom.Home.New = Class.create({
     
     this._contactChooser.insert(html.join(""));
     this._contactChooser.enable();
-    this._contactChooser.value = "_default_";
+    // Select first entry
+    this._contactChooser.down().selected = true;
   },
   
   _observe: function() {
@@ -121,8 +129,39 @@ xing.bikinibottom.Home.New = Class.create({
   },
   
   _submit: function() {
+    var req, value, key, recipientSpec;
+    
+    this._formData = this._form.serialize(true);
     this._form.getElements().invoke("disable");
-    alert("submitting");
+    
+    key = this._generateKey(this._owner.getId(), this._formData.recipient);
+    value = {
+      timestamp: (new Date).getTime(),
+      sender: this._owner.getId(),
+      subject: this._formData.subject
+    };
+    
+    req = opensocial.newDataRequest();
+    recipientSpec = "VIEWER";
+    req.add(req.newUpdatePersonAppDataRequest(recipientSpec, key, gadgets.json.stringify(value)), "message_saving");
+    req.send(this._submitCallback.bind(this));
+  },
+  
+  _submitCallback: function(data) {
+    if (data.get("message_saving").hadError()) {
+      alert("error!");
+    } else {
+      alert("sent!");
+      this._form.getElements().invoke("enable");
+    }
+  },
+  
+  _generateKey: function(ownerId, friendId) {
+    return this.KEY_TEMPLATE.interpolate({
+      ownerId: ownerId,
+      friendId: friendId,
+      date: (new Date).getTime()
+    });
   }
 });
 
@@ -161,6 +200,8 @@ xing.bikinibottom.Home.Outbox = Class.create({
     CONTAINER: "outbox"
   },
   
+  MESSAGE_TEMPLATE: '<li><a href="#">#{subject}</a>#{sender} (#{date})</li>',
+  
   initialize: function() {
     this.parent = parent;
     this.container = $(this.ids.CONTAINER);
@@ -176,6 +217,30 @@ xing.bikinibottom.Home.Outbox = Class.create({
   },
   
   _loadTab: function() {
+    if (this._tabLoaded) {
+      return;
+    }
     
+    this._loadMessages();
+    
+    this._tabLoaded = true;
+  },
+  
+  _loadMessages: function() {
+    var req, viewerSpec;
+    
+    req = opensocial.newDataRequest();
+    viewerSpec = opensocial.newIdSpec({ userId: "VIEWER", groupId: "SELF" });
+    req.add(req.newFetchPersonAppDataRequest(viewerSpec, "*"), "messages");
+    req.send(this._renderMessages.bind(this));
+  },
+  
+  _renderMessages: function(data) {
+    if (data.hadError()) {
+      alert("error retrieving messages");
+      return;
+    }
+    
+    console.log(data.get("messages").getData("messages"));
   }
 });
