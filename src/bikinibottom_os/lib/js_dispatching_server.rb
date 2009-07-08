@@ -13,6 +13,7 @@ module JsDispatchingServer
   
   def post_init
     @key ||= rand(100000)
+    puts @key
     log('post-init')
     log('opened')
   end
@@ -29,7 +30,7 @@ module JsDispatchingServer
     else
       data = JSON.parse(data.chomp("\000"))
       log(data)
-      send_data(data)
+      send_data("HELLO FROM receive_data")
     end
     
   end

@@ -23,7 +23,7 @@ xing.bikinibottom.Home = {
   
   _initSubModules: function() {
     this._submodules = {};
-    $w("New Inbox Outbox TextChat").each(function(moduleName) {
+    $w("TextChat New Inbox Outbox").each(function(moduleName) {
       this._submodules[moduleName] = new this[moduleName](this);
     }.bind(this));
   }

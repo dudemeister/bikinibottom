@@ -36,7 +36,11 @@ xing.bikinibottom.Home.TextChat = Class.create({
     this._form = $(this.ids.FORM);
     this._contactChooser = $(this.ids.CONTACT_CHOOSER);
     this._messageInput = $(this.ids.MESSAGE_INPUT);
-    
+    //this._setDefaultMessageRemover();
+    this._form.getElements().invoke("disable");
+  },
+  
+  _setDefaultMessageRemover: function() {
     this._messageInput.observe('focus', function() {
       if (this._messageInput.value == this._messageInput.defaultValue) {
         this._messageInput.value = '';
@@ -46,9 +50,7 @@ xing.bikinibottom.Home.TextChat = Class.create({
       if (this._messageInput.value == '') {
         this._messageInput.value = 'Type your message here ...';
       }
-    }.bind(this));
-    
-    this._form.getElements().invoke("disable");
+    }.bind(this));    
   },
   
   _loadData: function() {
@@ -103,7 +105,11 @@ xing.bikinibottom.Home.TextChat = Class.create({
   _observe: function() {
     this._form.observe("submit", function(event) {
       event.stop();
-      data = {'recipient': this._contactChooser.value, 'message': this._messageInput.value };
+      data = {
+        'sender': this._owner.getId(),
+        'recipient': this._contactChooser.value, 
+        'message': this._messageInput.value
+      };
       console.log('Sending data: ' + $H(data).toJSON());
       Dispatcher.sendMessage($H(data).toJSON());
     }.bind(this));
