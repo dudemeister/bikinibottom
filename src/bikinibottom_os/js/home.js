@@ -41,6 +41,7 @@ xing.bikinibottom.Home.New = Class.create({
   },
   
   KEY_TEMPLATE: "message_#{friendId}_#{ownerId}_#{date}",
+  RECIPIENT_TEMPLATE: '<option value="#{id}">#{displayName}</option>',
   
   initialize: function() {
     this.parent = parent;
@@ -103,17 +104,16 @@ xing.bikinibottom.Home.New = Class.create({
   },
   
   _renderRecipients: function() {
-    var optionTemplate, optionHtml, html;
+    var optionHtml, html;
     
-    optionTemplate = '<option value="#{id}">#{displayName}</option>';
     html = [];
     
     // "each" is here not the prototype method
     this._friends.each(function(friend) {
-      optionHtml = optionTemplate.interpolate({
+      optionHtml = this.RECIPIENT_TEMPLATE.interpolate({
         displayName: friend.getDisplayName(),
         id: friend.getId()
-      });
+      }.bind(this));
       html.push(optionHtml);
     });
     
