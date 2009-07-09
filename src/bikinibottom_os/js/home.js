@@ -283,7 +283,6 @@ xing.bikinibottom.Home.Outbox = Class.create({
   
   _loadTab: function() {
     this._loadMessages();
-    
     this._tabLoaded = true;
   },
   
@@ -325,10 +324,26 @@ xing.bikinibottom.Home.Outbox = Class.create({
       });
       
       gadgets.window.adjustHeight();
+
+      // observer links of messages
+      this._observeMessagesLinks();
+
     }.bind(this));
   },
   
   _getMessageEntry: function(messageObj) {
     return this.MESSAGE_TEMPLATE.interpolate(messageObj);
+  },
+  
+  _observeMessagesLinks: function() {
+    this.container.select('a').each(function(element){
+      element.observe("click", function(event) {
+      	this._showMovieFor(event.target.hash.replace('#', ''));
+      }.bind(this));
+    }.bind(this));
+  },
+  
+  _showMovieFor: function(movieId) {
+  	console.log(movieId);
   }
 });
