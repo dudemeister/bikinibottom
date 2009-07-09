@@ -67,7 +67,16 @@
           </form>
         </div>
         
-        <div id="inbox" style="display: none;">Inbox</div>
+        <div id="inbox" style="display: none;">
+          <div id="inbox-list"></div>
+          <div id="inbox-message-player" style="display: none;">
+            <h3 id="inbox-flash-player-label">#{subject} <br /><span>(#{senderName}, #{date})</span></h3>
+            <div id="inbox-flash-player">You need at least flash player version 10 to record a video. Get it <a href="http://get.adobe.com/de/flashplayer/" target="_blank">here</a>. [RES]</div>
+            <div>
+              &laquo; <a id="inbox-flash-payer-back" class="back-link" href="#">back [RES]</a>
+            </div>
+          </div>
+        </div>
         
         <div id="outbox" style="display: none;">
           <div id="outbox-list"></div>

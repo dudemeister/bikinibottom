@@ -24,7 +24,9 @@ form label {
 }
 
 #outbox-flash-player,
-#outbox-flash-player-label {
+#outbox-flash-player-label,
+#inbox-flash-player,
+#inbox-flash-player-label {
   margin: 5px 0;
 }
 
@@ -62,7 +64,15 @@ ul li a.unread {
   font-weight: bold;
 }
 
-#outbox-message-player {
+#outbox-message-player,
+#inbox-message-player {
   margin:0 auto;
   width:305px;
+}
+
+.hint {
+  font-size: 12px;
+  margin: 5px 0;
+  text-align: center;
+  font-style: italic;
 }

@@ -5,6 +5,11 @@
 var xing = xing || {};
 xing.bikinibottom = xing.bikinibottom || {};
 
+
+
+/**
+ * Home view
+ */
 xing.bikinibottom.Home = {
   initialize: function(settings) {
     this._tabObj = settings.tabs;
@@ -32,6 +37,11 @@ xing.bikinibottom.Home = {
 
 
 
+
+
+/**
+ * Creates a new video message
+ */
 xing.bikinibottom.Home.New = Class.create({
   ids: {
     CONTAINER: "new",
@@ -111,7 +121,7 @@ xing.bikinibottom.Home.New = Class.create({
     // "each" is here not the prototype method
     this._friends.each(function(friend) {
       optionHtml = this.RECIPIENT_TEMPLATE.interpolate({
-        displayName: friend.getDisplayName(),
+        displayName: friend.getDisplayName().escapeHTML(),
         id: friend.getId()
       });
       html.push(optionHtml);
@@ -191,6 +201,7 @@ xing.bikinibottom.Home.New = Class.create({
     value = {
       timestamp: (new Date).getTime(),
       sender: this._owner.getId(),
+      senderName: this._owner.getDisplayName().escapeHTML(),
       subject: (this._formData.subject || "Untitled [RES]").escapeHTML(),
       recipient: this._formData.recipient,
       recipientName: this._recipientName
@@ -248,64 +259,19 @@ xing.bikinibottom.Home.New = Class.create({
 
 
 
-xing.bikinibottom.Home.Inbox = Class.create({
-  ids: {
-    CONTAINER: "inbox"
-  },
-  
-  initialize: function(parent) {
-    this.parent = parent;
-    this.container = $(this.ids.CONTAINER);
-  },
-  
-  getTabData: function() {
-    return {
-      name: "Inbox", // [RES]
-      contentContainer: this.container,
-      tooltip: "Received messages", // [RES]
-      callback: this._loadTab.bind(this)
-    };
-  },
-  
-  _loadTab: function() {
-    
-  }
-});
 
 
-
-
-xing.bikinibottom.Home.Outbox = Class.create({
-  ids: {
-    CONTAINER: "outbox",
-    FLASH_CONTAINER: "outbox-flash-player",
-    LIST: "outbox-list",
-    BACK: "outbox-flash-payer-back",
-    MESSAGE_HEADLINE: "outbox-flash-player-label",
-    MESSAGE_DETAIL: "outbox-message-player"
-  },
-  
-  OUTBOX_TEMPLATE: '<ul>#{messages}</ul>',
+/**
+ * Generic MessageList class
+ */
+xing.bikinibottom.Home.MessageList = Class.create({
+  LIST_TEMPLATE: '<ul>#{messages}</ul>',
+  NO_MESSAGES_AVAILABLE: '<li class="hint">#{hint}</li>',
   FLASH_URL: "http://localhost:8080/bikinibottom_os/liverecord.swf?action=play",
-  MESSAGE_TEMPLATE: '<li><a href="##{id}">#{subject}</a>To: #{recipientName} (#{date})</li>',
   MAX_ENTRIES: 4,
   
   initialize: function() {
-    this.parent = parent;
-    this.container = $(this.ids.CONTAINER);
-    this.list = $(this.ids.LIST);
-    this.messageDetail = $(this.ids.MESSAGE_DETAIL);
-    this.headline = $(this.ids.MESSAGE_HEADLINE);
-    this.backButton = $(this.ids.BACK);
-  },
-  
-  getTabData: function() {
-    return {
-      name: "Outbox", // [RES]
-      contentContainer: this.container,
-      tooltip: "Sent messages", // [RES]
-      callback: this._loadTab.bind(this)
-    };
+    
   },
   
   _loadTab: function() {
@@ -320,27 +286,28 @@ xing.bikinibottom.Home.Outbox = Class.create({
     this._observeBackButton();
   },
   
-  _loadMessages: function() {
-    xing.bikinibottom.SocialData.getSentMessages(this._renderMessages.bind(this), true);
-  },
-  
   _renderMessages: function(messages) {
     var html;
-    this.messages = messages.slice(0, this.MAX_ENTRIES);
-    html = this.messages.map(this._getMessageEntry.bind(this)).join("");
-    this.list.innerHTML = this.OUTBOX_TEMPLATE.interpolate({
+    if (messages.size() < 1) {
+      // No messages found
+      html = this.NO_MESSAGES_AVAILABLE.interpolate({
+        hint: this.HINT
+      });
+    } else {
+      this.messages = messages.slice(0, this.MAX_ENTRIES);
+      html = this.messages.map(this._getMessageEntry.bind(this)).join("");
+    }
+    
+    this.list.innerHTML = this.LIST_TEMPLATE.interpolate({
       messages: html
     });
     
     // observer links of messages
     this._observeMessagesLinks();
+    
     gadgets.window.adjustHeight();
     
     // TODO lazy load thumbnail urls and profile urls and bin them with the message recipients
-  },
-  
-  _getMessageEntry: function(messageObj) {
-    return this.MESSAGE_TEMPLATE.interpolate(messageObj);
   },
   
   _observeMessagesLinks: function() {
@@ -384,5 +351,105 @@ xing.bikinibottom.Home.Outbox = Class.create({
     this.messageDetail.show();
     
     gadgets.window.adjustHeight();
+  }
+});
+
+
+
+
+
+
+/**
+ * Class that handles received messages
+ */
+xing.bikinibottom.Home.Inbox = Class.create(xing.bikinibottom.Home.MessageList, {
+  ids: {
+    CONTAINER: "inbox",
+    FLASH_CONTAINER: "inbox-flash-player",
+    LIST: "inbox-list",
+    BACK: "inbox-flash-payer-back",
+    MESSAGE_HEADLINE: "inbox-flash-player-label",
+    MESSAGE_DETAIL: "inbox-message-player"
+  },
+  
+  HINT: "You haven't received any messages yet. [RES]",
+  INBOX_MESSAGE_TEMPLATE: '<li><a href="##{id}">#{subject}</a>From: #{senderName} (#{date})</li>', // [RES]
+  
+  initialize: function($super, parent) {
+    $super();
+    
+    this.parent = parent;
+    this.container = $(this.ids.CONTAINER);
+    this.list = $(this.ids.LIST);
+    this.messageDetail = $(this.ids.MESSAGE_DETAIL);
+    this.headline = $(this.ids.MESSAGE_HEADLINE);
+    this.backButton = $(this.ids.BACK);
+  },
+  
+  getTabData: function() {
+    return {
+      name: "Inbox", // [RES]
+      contentContainer: this.container,
+      tooltip: "Received messages", // [RES]
+      callback: this._loadTab.bind(this)
+    };
+  },
+  
+  _loadMessages: function() {
+    xing.bikinibottom.SocialData.getReceivedMessages(this._renderMessages.bind(this), true);
+  },
+  
+  _getMessageEntry: function(messageObj) {
+    return this.INBOX_MESSAGE_TEMPLATE.interpolate(messageObj);
+  }
+});
+
+
+
+
+
+
+/**
+ * Class that handles sent messages
+ */
+xing.bikinibottom.Home.Outbox = Class.create(xing.bikinibottom.Home.MessageList, {
+  ids: {
+    CONTAINER: "outbox",
+    FLASH_CONTAINER: "outbox-flash-player",
+    LIST: "outbox-list",
+    BACK: "outbox-flash-payer-back",
+    MESSAGE_HEADLINE: "outbox-flash-player-label",
+    MESSAGE_DETAIL: "outbox-message-player"
+  },
+  
+  HINT: "You haven't sent any messages yet. [RES]",
+  OUTBOX_MESSAGE_TEMPLATE: '<li><a href="##{id}">#{subject}</a>To: #{recipientName} (#{date})</li>', // [RES]
+  
+  initialize: function($super, parent) {
+    $super();
+    
+    this.parent = parent;
+    this.container = $(this.ids.CONTAINER);
+    this.list = $(this.ids.LIST);
+    this.messageDetail = $(this.ids.MESSAGE_DETAIL);
+    this.headline = $(this.ids.MESSAGE_HEADLINE);
+    this.backButton = $(this.ids.BACK);
+  },
+  
+  getTabData: function() {
+    return {
+      name: "Outbox", // [RES]
+      contentContainer: this.container,
+      tooltip: "Sent messages", // [RES]
+      callback: this._loadTab.bind(this)
+    };
+  },
+  
+  _loadMessages: function() {
+    xing.bikinibottom.SocialData.getSentMessages(this._renderMessages.bind(this), true);
+  },
+  
+  _getMessageEntry: function(messageObj) {
+    return this.OUTBOX_MESSAGE_TEMPLATE.interpolate(messageObj);
   }
 });
