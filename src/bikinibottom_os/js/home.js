@@ -43,7 +43,8 @@ xing.bikinibottom.Home.New = Class.create({
   },
   
   classNames: {
-    MINI_MESSAGE: "mini-message"
+    MINI_MESSAGE: "mini-message",
+    ERROR_MESSAGE: "error-message"
   },
   
   KEY_TEMPLATE: "message_#{friendId}_#{ownerId}_#{date}",
@@ -135,8 +136,21 @@ xing.bikinibottom.Home.New = Class.create({
   },
   
   _addVideo: function() {
+    var msg;
+    
     // this needs to be generated here, since we're calling the flash with these params
     this._formData = this._form.serialize(true);
+    
+    if (!this._formData.recipient) {
+      msg = new gadgets.MiniMessage(xing.bikinibottom.moduleId);
+      msgElem = msg.createTimerMessage(
+        "Please select a recipient. [RES]", 5
+      );
+      $(msgElem).addClassName(this.classNames.MINI_MESSAGE).addClassName(this.classNames.ERROR_MESSAGE);
+      gadgets.window.adjustHeight();
+      return;
+    }
+    
     // Get recipient name for confirmation message
     this._recipientName = this._contactChooser.down("[value='" + this._formData.recipient + "']").innerHTML;
     this.currentVideoKey = this._generateKey(this._owner.getId(), this._formData.recipient);
@@ -172,7 +186,8 @@ xing.bikinibottom.Home.New = Class.create({
       timestamp: (new Date).getTime(),
       sender: this._owner.getId(),
       subject: (this._formData.subject || "Untitled [RES]").escapeHTML(),
-      recipient: this._recipientName
+      recipient: this._formData.recipient,
+      recipientName: this._recipientName
     };
     
     this._form.getElements().invoke("disable");
@@ -258,16 +273,19 @@ xing.bikinibottom.Home.Outbox = Class.create({
   ids: {
     CONTAINER: "outbox",
     FLASH_CONTAINER: "outbox-flash-player",
-    FLASH_LABEL: "outbox-flash-player-label"
+    FLASH_LABEL: "outbox-flash-player-label",
+    LIST: "outbox-list"
   },
   
   OUTBOX_TEMPLATE: '<ul>#{messages}</ul>',
-  MESSAGE_TEMPLATE: '<li><a href="##{id}">#{subject}</a>To: #{recipient} (#{date})</li>',
   FLASH_URL: "http://localhost:8080/bikinibottom_os/liverecord.swf?action=play",
+  MESSAGE_TEMPLATE: '<li><a href="##{id}">#{subject}</a>To: #{recipientName} (#{date})</li>',
+  MAX_ENTRIES: 4,
   
   initialize: function() {
     this.parent = parent;
     this.container = $(this.ids.CONTAINER);
+    this.list = $(this.ids.LIST);
   },
   
   getTabData: function() {
@@ -286,48 +304,22 @@ xing.bikinibottom.Home.Outbox = Class.create({
   },
   
   _loadMessages: function() {
-    var req, viewerSpec;
-    
-    req = opensocial.newDataRequest();
-    viewerSpec = opensocial.newIdSpec({ userId: "OWNER", groupId: "SELF" });
-    req.add(req.newFetchPersonAppDataRequest(viewerSpec, "*"), "messages");
-    req.send(this._renderMessages.bind(this));
+    xing.bikinibottom.SocialData.getSentMessages(this._renderMessages.bind(this), true);
   },
   
-  _renderMessages: function(data) {
-    if (data.hadError()) {
-      alert("error retrieving messages... w000t!");
-      return;
-    }
+  _renderMessages: function(messages) {
+    var html;
+    messages = messages.slice(0, this.MAX_ENTRIES);
+    html = messages.map(this._getMessageEntry.bind(this)).join("");
+    this.list.innerHTML = this.OUTBOX_TEMPLATE.interpolate({
+      messages: html
+    });
     
-    var messages, outbox, messageObj, i, json, html;
+    // observer links of messages
+    this._observeMessagesLinks();
+    gadgets.window.adjustHeight();
     
-    messages = data.get("messages").getData();
-    html = [];
-    
-    xing.bikinibottom.SocialData.getOwner(function(owner) {
-      outbox = messages[owner.getId()];
-      for (id in outbox) {
-        json = gadgets.util.unescapeString(outbox[id]);
-        json = gadgets.json.parse(json);
-        messageObj = Object.extend(json, {
-          id: id,
-          date: new Date(json.timestamp).toGMTString()
-        });
-        html.push(this._getMessageEntry(messageObj));
-      }
-      
-      // Put it in the dom tree
-      $('outbox-list').innerHTML = this.OUTBOX_TEMPLATE.interpolate({
-        messages: html.join("")
-      });
-      
-      gadgets.window.adjustHeight();
-
-      // observer links of messages
-      this._observeMessagesLinks();
-
-    }.bind(this));
+    // TODO lazy load thumbnail urls and profile urls and bin them with the message recipients
   },
   
   _getMessageEntry: function(messageObj) {
@@ -335,18 +327,18 @@ xing.bikinibottom.Home.Outbox = Class.create({
   },
   
   _observeMessagesLinks: function() {
-    $('outbox-list').select('a').each(function(element){
+    this.list.select('a').each(function(element){
       element.observe("click", function(event) {
-      	this._showMovieFor(event.target.hash.replace('#', ''));
+        this._showMovieFor(Event.element(event).hash.replace("#", ""));
       }.bind(this));
     }.bind(this));
   },
   
   _observeBackButton: function() {
-  	$('outbox-flash-payer-back').observe('click', function(event){
-  		this._showMessages();
-  		event.stop();
-  	}.bind(this));
+    $('outbox-flash-payer-back').observe('click', function(event){
+      this._showMessages();
+      event.stop();
+    }.bind(this));
   },
   
   _showMessages: function() {
@@ -355,10 +347,10 @@ xing.bikinibottom.Home.Outbox = Class.create({
   },
   
   _showMovieFor: function(movieId) {
-  	console.log(movieId);
-  	$('outbox-list').hide();
-  	$('outbox-message-player').show();
-  	if (gadgets.flash.getMajorVersion() >= 10) {
+    console.log(movieId);
+    this.list.hide();
+    $('outbox-message-player').show();
+    if (gadgets.flash.getMajorVersion() >= 10) {
       gadgets.flash.embedFlash(
         this.FLASH_URL + "&videoId=" + movieId,
         this.ids.FLASH_CONTAINER,
@@ -366,6 +358,9 @@ xing.bikinibottom.Home.Outbox = Class.create({
         { width: 303, height: 227 }
       );
     }
-    gadgets.window.adjustHeight(); 	
+    
+    // TODO: Add message for flash version < 10
+    
+    gadgets.window.adjustHeight();
   }
 });

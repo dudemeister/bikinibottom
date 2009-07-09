@@ -60,3 +60,8 @@ label {
   font-size: 11px;
   padding: 2px;
 }
+
+.error-message {
+  background-color: #FF0000;
+  color: #fff;
+}

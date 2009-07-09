@@ -4,9 +4,9 @@
     <Require feature="opensocial-0.8" />
     <Require feature="dynamic-height" />
     <Require feature="flash" />
-    <Require feature="settitle" />
     <Require feature="tabs" />
-    <Require feature="minimessage"/>
+    <Require feature="minimessage" />
+    <Require feature="views" />
   </ModulePrefs>
   <!--
     Please note:
@@ -43,7 +43,7 @@
           <form id="message-form">
             <label for="recipient">Recipient [RES]</label>
             <select id="recipient" name="recipient">
-              <option>-- Please select [RES] --</option>
+              <option value="">-- Please select [RES] --</option>
             </select>
             <label for="subject">Subject [RES]</label>
             <input type="text" id="subject" name="subject" value="" />
