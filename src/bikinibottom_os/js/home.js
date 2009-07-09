@@ -161,8 +161,12 @@ xing.bikinibottom.Home.New = Class.create({
       gadgets.flash.embedFlash(
         this.FLASH_URL + "&videoId=" + this.currentVideoKey,
         this.ids.FLASH_CONTAINER,
-        10,
-        { width: 303, height: 227 }
+        10, {
+          width: 303,
+          height: 227,
+          swliveconnect: true,
+          allowscriptaccess: "always"
+        }
       );
     }
     
@@ -364,8 +368,12 @@ xing.bikinibottom.Home.Outbox = Class.create({
       gadgets.flash.embedFlash(
         this.FLASH_URL + "&videoId=" + movieId,
         this.ids.FLASH_CONTAINER,
-        10,
-        { width: 303, height: 227 }
+        10, {
+          width: 303,
+          height: 227,
+          swliveconnect: true,
+          allowscriptaccess: "always"
+        }
       );
     }
     
