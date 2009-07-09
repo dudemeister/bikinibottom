@@ -73,9 +73,11 @@
         <div id="outbox" style="display: none;">
           <div id="outbox-list"></div>
           <div id="outbox-message-player" style="display: none;">
-            <label id="outbox-flash-player-label" for="flash-player">Video message [RES]</label>
+            <h3 id="outbox-flash-player-label">#{subject} <br /><span>(#{recipientName}, #{date})</span></h3>
             <div id="outbox-flash-player">You need at least flash player version 10 to record a video. Get it <a href="http://get.adobe.com/de/flashplayer/" target="_blank">here</a>. [RES]</div>
-            <a id="outbox-flash-payer-back" href="#">back [RES]</a>    
+            <div>
+              &laquo; <a id="outbox-flash-payer-back" class="back-link" href="#">back [RES]</a>
+            </div>
           </div>
         </div>
         

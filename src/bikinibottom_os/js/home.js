@@ -273,8 +273,10 @@ xing.bikinibottom.Home.Outbox = Class.create({
   ids: {
     CONTAINER: "outbox",
     FLASH_CONTAINER: "outbox-flash-player",
-    FLASH_LABEL: "outbox-flash-player-label",
-    LIST: "outbox-list"
+    LIST: "outbox-list",
+    BACK: "outbox-flash-payer-back",
+    MESSAGE_HEADLINE: "outbox-flash-player-label",
+    MESSAGE_DETAIL: "outbox-message-player"
   },
   
   OUTBOX_TEMPLATE: '<ul>#{messages}</ul>',
@@ -286,6 +288,9 @@ xing.bikinibottom.Home.Outbox = Class.create({
     this.parent = parent;
     this.container = $(this.ids.CONTAINER);
     this.list = $(this.ids.LIST);
+    this.messageDetail = $(this.ids.MESSAGE_DETAIL);
+    this.headline = $(this.ids.MESSAGE_HEADLINE);
+    this.backButton = $(this.ids.BACK);
   },
   
   getTabData: function() {
@@ -299,8 +304,14 @@ xing.bikinibottom.Home.Outbox = Class.create({
   
   _loadTab: function() {
     this._loadMessages();
-    this._observeBackButton();
+    this._showMessages();
+    
+    if (this._tabLoaded) {
+      return;
+    }
+    
     this._tabLoaded = true;
+    this._observeBackButton();
   },
   
   _loadMessages: function() {
@@ -309,8 +320,8 @@ xing.bikinibottom.Home.Outbox = Class.create({
   
   _renderMessages: function(messages) {
     var html;
-    messages = messages.slice(0, this.MAX_ENTRIES);
-    html = messages.map(this._getMessageEntry.bind(this)).join("");
+    this.messages = messages.slice(0, this.MAX_ENTRIES);
+    html = this.messages.map(this._getMessageEntry.bind(this)).join("");
     this.list.innerHTML = this.OUTBOX_TEMPLATE.interpolate({
       messages: html
     });
@@ -327,29 +338,26 @@ xing.bikinibottom.Home.Outbox = Class.create({
   },
   
   _observeMessagesLinks: function() {
-    this.list.select('a').each(function(element){
-      element.observe("click", function(event) {
-        this._showMovieFor(Event.element(event).hash.replace("#", ""));
-      }.bind(this));
+    this.list.select("a").invoke("observe", "click", function(event){
+      this._showMovieFor(Event.element(event).hash.replace("#", ""));
     }.bind(this));
   },
   
   _observeBackButton: function() {
-    $('outbox-flash-payer-back').observe('click', function(event){
+    this.backButton.observe("click", function(event){
       this._showMessages();
+      gadgets.window.adjustHeight();
       event.stop();
     }.bind(this));
   },
   
   _showMessages: function() {
-    $('outbox-list').show();
-    $('outbox-message-player').hide();
+    this.list.show();
+    this.messageDetail.hide();
   },
   
   _showMovieFor: function(movieId) {
-    console.log(movieId);
-    this.list.hide();
-    $('outbox-message-player').show();
+    var i;
     if (gadgets.flash.getMajorVersion() >= 10) {
       gadgets.flash.embedFlash(
         this.FLASH_URL + "&videoId=" + movieId,
@@ -359,7 +367,11 @@ xing.bikinibottom.Home.Outbox = Class.create({
       );
     }
     
-    // TODO: Add message for flash version < 10
+    i = this.messages.pluck("id").indexOf(movieId);
+    this.headline.innerHTML = this.headline.innerHTML.interpolate(this.messages[i]);
+    
+    this.list.hide();
+    this.messageDetail.show();
     
     gadgets.window.adjustHeight();
   }
