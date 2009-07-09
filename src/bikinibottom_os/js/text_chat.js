@@ -6,6 +6,8 @@ xing.bikinibottom.Home.TextChat = Class.create({
     MESSAGE_INPUT: "text-chat-message"
   },
   
+  RECIPIENT_TEMPLATE: '<option value="#{id}">#{displayName}</option>',
+  
   initialize: function(parent) {
     this.parent = parent;
     this.container = $(this.ids.CONTAINER);
@@ -48,7 +50,7 @@ xing.bikinibottom.Home.TextChat = Class.create({
     }.bind(this));
     this._messageInput.observe('blur', function() {
       if (this._messageInput.value == '') {
-        this._messageInput.value = 'Type your message here ...';
+        this._messageInput.value = 'Type your message here ...'; // [RES]
       }
     }.bind(this));    
   },
@@ -82,19 +84,18 @@ xing.bikinibottom.Home.TextChat = Class.create({
   },
   
   _renderRecipients: function() {
-    var optionTemplate, optionHtml, html;
+    var optionHtml, html;
     
-    optionTemplate = '<option value="#{id}">#{displayName}</option>';
     html = [];
     
     // "each" is here not the prototype method
     this._friends.each(function(friend) {
-      optionHtml = optionTemplate.interpolate({
+      optionHtml = this.RECIPIENT_TEMPLATE.interpolate({
         displayName: friend.getDisplayName(),
         id: friend.getId()
       });
       html.push(optionHtml);
-    });
+    }.bind(this));
     
     this._contactChooser.insert(html.join(""));
     this._contactChooser.enable();
@@ -106,9 +107,9 @@ xing.bikinibottom.Home.TextChat = Class.create({
     this._form.observe("submit", function(event) {
       event.stop();
       data = {
-        'sender': this._owner.getId(),
-        'recipient': this._contactChooser.value, 
-        'message': this._messageInput.value
+        sender: this._owner.getId(),
+        recipient: this._contactChooser.value, 
+        message: this._messageInput.value
       };
       console.log('Sending data: ' + $H(data).toJSON());
       Dispatcher.sendMessage($H(data).toJSON());

@@ -37,11 +37,14 @@ xing.bikinibottom.Home.New = Class.create({
     CONTAINER: "new",
     FORM: "message-form",
     CONTACT_CHOOSER: "recipient",
-    SUBMIT_BUTTON: "submit-new"
+    SUBMIT_BUTTON: "submit-new",
+    FLASH_CONTAINER: "flash-recorder",
+    FLASH_LABEL: "flash-recorder-label"
   },
   
   KEY_TEMPLATE: "message_#{friendId}_#{ownerId}_#{date}",
   RECIPIENT_TEMPLATE: '<option value="#{id}">#{displayName}</option>',
+  FLASH_URL: "http://localhost:8080/bikinibottom_os/liverecord.swf?action=record",
   
   initialize: function() {
     this.parent = parent;
@@ -113,9 +116,9 @@ xing.bikinibottom.Home.New = Class.create({
       optionHtml = this.RECIPIENT_TEMPLATE.interpolate({
         displayName: friend.getDisplayName(),
         id: friend.getId()
-      }.bind(this));
+      });
       html.push(optionHtml);
-    });
+    }.bind(this));
     
     this._contactChooser.insert(html.join(""));
     this._contactChooser.enable();
@@ -126,21 +129,32 @@ xing.bikinibottom.Home.New = Class.create({
   _observe: function() {
     this._form.observe("submit", function(event) {
       event.stop();
-      //this._submit();
       if(this.videoAdded) {
-      	this._submit();
+        this._submit();
       } else {
-      	this._addVideo();
+        this._addVideo();
       }
-      
     }.bind(this));
   },
   
   _addVideo: function() {
-    gadgets.flash.embedFlash("http://localhost:8080/bikinibottom_os/liverecord.swf", "flash-viewer", 10, {width: 300, height: 250});
+    if (gadgets.flash.getMajorVersion() >= 10) {
+      gadgets.flash.embedFlash(
+        this.FLASH_URL,
+        this.ids.FLASH_CONTAINER,
+        10,
+        { width: 303, height: 227 }
+      );
+    }
+    
+    // Show elements
+    $(this.ids.FLASH_CONTAINER, this.ids.FLASH_LABEL).invoke("show");
+    
+    // Adjust gadget height
     gadgets.window.adjustHeight();
+    
     this.videoAdded = true;
-    this.submitButton.setValue('foobar');
+    this.submitButton.setValue("Send [RES]");
   },
   
   _submit: function() {

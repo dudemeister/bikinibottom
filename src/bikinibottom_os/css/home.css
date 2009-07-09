@@ -1,0 +1,20 @@
+form {
+  padding: 5px;
+  width: 303px;
+  margin: 0 auto;
+}
+
+form select,
+form input[type=text] {
+  width: 303px;
+  margin-bottom: 6px;
+  display: block;
+}
+
+form label {
+  display: block;
+}
+
+#flash-recorder {
+  margin-bottom: 6px;
+}
