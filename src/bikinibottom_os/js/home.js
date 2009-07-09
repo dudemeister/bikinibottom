@@ -211,7 +211,11 @@ xing.bikinibottom.Home.New = Class.create({
     this._form.subject.clear();
     this.submitButton.setValue("Add Video [RES]");
     this._form.getElements().invoke("enable");
+<<<<<<< HEAD:src/bikinibottom_os/js/home.js
 
+=======
+    
+>>>>>>> Minor bug fixes:src/bikinibottom_os/js/home.js
     // update size of gadget
     gadgets.window.adjustHeight();
   },
