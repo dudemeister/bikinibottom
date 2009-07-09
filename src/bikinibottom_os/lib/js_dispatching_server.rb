@@ -6,6 +6,7 @@ require 'json'
 require 'ruby-debug'
 
 require File.join(File.dirname(__FILE__), 'chat')
+require File.join(File.dirname(__FILE__), 'user')
 
 Debugger.start
 
@@ -24,29 +25,26 @@ module JsDispatchingServer
   end
   
   def receive_data(data)
-    log("received: #{data}")
-    if data.match(/^auth_response:(.*)/)
-      # bind_socket_to_queues()
-      auth = JSON.parse($1.chomp("\000"))
-      log("auth json: #{auth.inspect}")
-      if authenticate_user(auth) && !@subscribed
-        bind_socket_to_queues
-      end
-    else
-      data = JSON.parse(data.chomp("\000"))
-      chat = Chat.find_or_create(data['sender'], data['recipient'])
-      msg = "Found chat #{chat.chat_id}(#{chat.id}) for #{chat.user_1} and #{chat.user_2}"
-      log(msg)
-      send_data(msg)
-      chat.send_message_from(data['sender'], data['message'])
-    end
     
-  end
-  
-  # add \000 delimiter if not present. wraps send_data from EventMachine.
-  def send_data(message)
-    message = "#{message}\000" unless message =~ /\000$/
-    super(message)
+    data = JSON.parse(data.chomp("\000"))
+
+    case data['cmd']
+      
+      # create queue for the user, and remember he's online
+      when 'ping'
+        User.add_online(data['sender'], @key)
+        log("#{data['sender']} sent 'ping'")
+        
+      when 'message' 
+        chat = Chat.find_or_create(data['sender'], data['recipient'], self)
+        msg = "Found chat #{chat.chat_id}(#{chat.object_id}) for #{chat.user_1} and #{chat.user_2}"
+        log(msg)
+        chat.new_message_from(data['sender'], data['message'])
+
+      else  
+        raise "unknown command #{data[:cmd]}"
+    end
+
   end
   
   def unbind
@@ -56,45 +54,17 @@ module JsDispatchingServer
     # end
   end
   
-  def authenticate_user(auth_data)
-    potential_user = User.find(auth_data["user_id"])
-    
-    @user = potential_user if potential_user && potential_user.communication_token_valid?(auth_data["token"])
-    if potential_user
-      log("authenticated #{potential_user.display_name}")
-      send_data("#{{"x_target" => "socket_id", "socket_id" => "#{@key}"}.to_json}\0")
-      bind_socket_to_queues
-    else
-      log("could not authenticate #{auth_data.inspect}")
-    end
-  end
-  
-  def bind_socket_to_queues
-    amq = MQ.new
-    @user.audiences.each do |audience|
-      amq.queue("consumer-#{@key}-audience.a#{audience.id}").bind(amq.topic("audiences"), :key => "audiences.a#{audience.id}").subscribe{ |msg|
-        message = JSON(msg)
-        sender_socket_id = message['socket_id']
-        message.merge!({:x_target => 'cc.receiveMessage'})
-        if sender_socket_id && sender_socket_id.to_i != @key
-          log('sending data out: ' + message.to_s + ' ' + sender_socket_id)
-          send_data("#{message.to_json}\0")
-        end
-      }
-      log("subscribing to audience #{audience.id}")
-    end
-    @subscribed = true
-  end 
-  
-  def unbind_socket_from_queues
-    # not implemented yet
-  end
-  
   include FlashServer
   
-  def log(text)
-    puts "connection #{@key && @key.inspect || 'uninitialized'}: #{text}"
-  end
+    # add \000 delimiter if not present. wraps send_data from EventMachine.
+    def send_data(message)
+      message = "#{message}\000" unless message =~ /\000$/
+      super(message)
+    end
+  
+    def log(text)
+      puts "connection #{@key && @key.inspect || 'uninitialized'}: #{text}"
+    end
 
 end
 
@@ -105,4 +75,5 @@ EventMachine::run do
   EventMachine::start_server(host, port, JsDispatchingServer)
   puts "Started JsDispatchingServer on #{host}:#{port}..."
   puts $$
+  $amq = MQ.new
 end

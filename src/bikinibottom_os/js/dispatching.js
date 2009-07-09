@@ -68,7 +68,7 @@ DispatchingSystem.prototype = {
     // make it a first class object
     //eval("var message = " + raw_data);
     
-    $('text-chat-conversation').innerHTML = $('text-chat-conversation').innerHTML + raw_data;
+    $('text-chat-conversation').innerHTML = $('text-chat-conversation').innerHTML + '<p class="message">' + raw_data + '</p>';
     
     //switch(message.x_target) {
     //  // special case: on initial successful connection this sets the socket_id

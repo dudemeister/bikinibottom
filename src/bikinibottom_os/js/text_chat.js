@@ -80,6 +80,8 @@ xing.bikinibottom.Home.TextChat = Class.create({
     
     this._renderRecipients();    
     this._form.getElements().invoke("enable");
+    
+    this._sendPing(); // needs OSO owner, so only done here
   },
   
   _renderRecipients: function() {
@@ -106,6 +108,7 @@ xing.bikinibottom.Home.TextChat = Class.create({
     this._form.observe("submit", function(event) {
       event.stop();
       data = {
+        cmd: 'message',
         sender: this._owner.getId(),
         recipient: this._contactChooser.value, 
         message: this._messageInput.value
@@ -113,6 +116,14 @@ xing.bikinibottom.Home.TextChat = Class.create({
       console.log('Sending data: ' + $H(data).toJSON());
       Dispatcher.sendMessage($H(data).toJSON() + "\000");
     }.bind(this));
-  }
+  },
   
+  _sendPing: function() {
+    data = {
+      cmd: 'ping',
+      sender: this._owner.getId()
+    };
+    console.log('Sending data: ' + $H(data).toJSON());
+    Dispatcher.sendMessage($H(data).toJSON() + "\000");
+  }
 });
