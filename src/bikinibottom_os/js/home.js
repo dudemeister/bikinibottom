@@ -257,8 +257,8 @@ xing.bikinibottom.Home.Inbox = Class.create({
 xing.bikinibottom.Home.Outbox = Class.create({
   ids: {
     CONTAINER: "outbox",
-    FLASH_CONTAINER: "flash-player",
-    FLASH_LABEL: "flash-player-label"
+    FLASH_CONTAINER: "outbox-flash-player",
+    FLASH_LABEL: "outbox-flash-player-label"
   },
   
   OUTBOX_TEMPLATE: '<ul>#{messages}</ul>',
@@ -281,6 +281,7 @@ xing.bikinibottom.Home.Outbox = Class.create({
   
   _loadTab: function() {
     this._loadMessages();
+    this._observeBackButton();
     this._tabLoaded = true;
   },
   
@@ -334,16 +335,29 @@ xing.bikinibottom.Home.Outbox = Class.create({
   },
   
   _observeMessagesLinks: function() {
-    this.container.select('a').each(function(element){
+    $('outbox-list').select('a').each(function(element){
       element.observe("click", function(event) {
       	this._showMovieFor(event.target.hash.replace('#', ''));
       }.bind(this));
     }.bind(this));
   },
   
+  _observeBackButton: function() {
+  	$('outbox-flash-payer-back').observe('click', function(event){
+  		this._showMessages();
+  		event.stop();
+  	}.bind(this));
+  },
+  
+  _showMessages: function() {
+    $('outbox-list').show();
+    $('outbox-message-player').hide();
+  },
+  
   _showMovieFor: function(movieId) {
   	console.log(movieId);
   	$('outbox-list').hide();
+  	$('outbox-message-player').show();
   	if (gadgets.flash.getMajorVersion() >= 10) {
       gadgets.flash.embedFlash(
         this.FLASH_URL + "&videoId=" + movieId,
