@@ -270,9 +270,7 @@ xing.bikinibottom.Home.MessageList = Class.create({
   FLASH_URL: "http://localhost:8080/bikinibottom_os/liverecord.swf?action=play",
   MAX_ENTRIES: 4,
   
-  initialize: function() {
-    
-  },
+  initialize: function() {},
   
   _loadTab: function() {
     this._loadMessages();
@@ -372,8 +370,13 @@ xing.bikinibottom.Home.Inbox = Class.create(xing.bikinibottom.Home.MessageList, 
     MESSAGE_DETAIL: "inbox-message-player"
   },
   
+  classNames: {
+    UNREAD: "unread"
+  },
+  
   HINT: "You haven't received any messages yet. [RES]",
-  INBOX_MESSAGE_TEMPLATE: '<li><a href="##{id}">#{subject}</a>From: #{senderName} (#{date})</li>', // [RES]
+  INBOX_MESSAGE_TEMPLATE: '<li><a href="##{id}" class="unread">#{subject}</a>From: #{senderName} (#{date})</li>', // [RES]
+  DELIMITER: "-|--|-",
   
   initialize: function($super, parent) {
     $super();
@@ -384,6 +387,8 @@ xing.bikinibottom.Home.Inbox = Class.create(xing.bikinibottom.Home.MessageList, 
     this.messageDetail = $(this.ids.MESSAGE_DETAIL);
     this.headline = $(this.ids.MESSAGE_HEADLINE);
     this.backButton = $(this.ids.BACK);
+    
+    this.prefs = new gadgets.Prefs();
   },
   
   getTabData: function() {
@@ -396,11 +401,33 @@ xing.bikinibottom.Home.Inbox = Class.create(xing.bikinibottom.Home.MessageList, 
   },
   
   _loadMessages: function() {
-    xing.bikinibottom.SocialData.getReceivedMessages(this._renderMessages.bind(this), true);
+    xing.bikinibottom.SocialData.getReceivedMessages(function(messages) {
+      this._renderMessages(messages);
+      this._markUnReadMessages();
+    }.bind(this), true);
   },
   
   _getMessageEntry: function(messageObj) {
     return this.INBOX_MESSAGE_TEMPLATE.interpolate(messageObj);
+  },
+  
+  _markUnReadMessages: function() {
+    this._readMessages = this.prefs.getString("read_messages").split(this.DELIMITER);
+    this._readMessages.each(function(messageId) {
+      this.list.select("a[href='#" + messageId + "']").invoke("removeClassName", this.classNames.UNREAD);
+    }.bind(this));
+  },
+  
+  _showMovieFor: function($super, messageId) {
+    $super(messageId);
+    
+    this._markAsRead(messageId);
+  },
+  
+  _markAsRead: function(messageId) {
+    this._readMessages = this._readMessages.without(messageId);
+    this.prefs.set("read_messages", this._readMessages.join(this.DELIMITER));
+    this.list.down("a[href='#" + messageId + "']").removeClassName(this.classNames.UNREAD);
   }
 });
 

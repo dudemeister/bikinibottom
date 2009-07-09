@@ -27,7 +27,7 @@ xing.bikinibottom.SocialData = {
   
   getOwnerFriends: function(callback, forceLoading) {
     callback = callback || function() {};
-    console.log(callback);
+    
     if (this._friends && !forceLoading) {
       return callback(this._friends);
     }
@@ -101,7 +101,8 @@ xing.bikinibottom.SocialData = {
       callback(this._receivedMessages);
     }
     
-    var req, ownerSpec, message, messages_by_sender, receivedMessagesJson, receivedMessages, i;
+    var req, ownerSpec, message, messages_by_sender,
+      receivedMessagesJson, receivedMessages, i;
     
     req = opensocial.newDataRequest();
     ownerSpec = opensocial.newIdSpec({ userId: "OWNER", groupId: "FRIENDS" });
@@ -121,13 +122,13 @@ xing.bikinibottom.SocialData = {
           message = messages_by_id[message_id];
           message = gadgets.util.unescapeString(message);
           message = gadgets.json.parse(message);
-
+          
           message = Object.extend(message, {
             id: message_id,
             date: new Date(message.timestamp).toGMTString()
           });
           if (message.recipient == owner.fields_.id) {
-          	receivedMessages.push(message);
+            receivedMessages.push(message);
           }
         }
       }
@@ -136,7 +137,6 @@ xing.bikinibottom.SocialData = {
         return message.timestamp;
       }).reverse();
       
-      console.log(receivedMessages);
       callback(receivedMessages);
       }.bind(this));      
     }.bind(this));

@@ -7,7 +7,9 @@
     <Require feature="tabs" />
     <Require feature="minimessage" />
     <Require feature="views" />
+    <Require feature="setprefs" />
   </ModulePrefs>
+  <UserPref name="read_messages" default_value="" datatype="hidden" />
   <!--
     Please note:
     Wordings are marked with "[RES]" to outsource them later into
