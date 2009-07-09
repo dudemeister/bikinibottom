@@ -70,7 +70,14 @@
         
         <div id="inbox" style="display: none;">Inbox</div>
         
-        <div id="outbox" style="display: none;"></div>
+        <div id="outbox" style="display: none;">
+          <div id="outbox-list"></div>
+          <div id="outbox-message-player" style="display: none;">
+            <label id="outbox-flash-player-label" for="flash-player">Video message [RES]</label>
+            <div id="outbox-flash-player">You need at least flash player version 10 to record a video. Get it <a href="http://get.adobe.com/de/flashplayer/" target="_blank">here</a>. [RES]</div>
+            <a id="outbox-flash-payer-back" href="#">back [RES]</a>    
+          </div>
+        </div>
         
         <script type="text/javascript" charset="utf-8">
           gadgets.util.registerOnLoadHandler(function() {

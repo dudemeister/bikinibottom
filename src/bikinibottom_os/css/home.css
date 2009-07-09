@@ -41,3 +41,8 @@ ul li a {
   font-weight: bold;
   display: block;
 }
+
+#flash-player {
+  margin:0 auto;
+  width:305px;
+ }

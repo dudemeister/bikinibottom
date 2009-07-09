@@ -211,11 +211,6 @@ xing.bikinibottom.Home.New = Class.create({
     this._form.subject.clear();
     this.submitButton.setValue("Add Video [RES]");
     this._form.getElements().invoke("enable");
-<<<<<<< HEAD:src/bikinibottom_os/js/home.js
-
-=======
-    
->>>>>>> Minor bug fixes:src/bikinibottom_os/js/home.js
     // update size of gadget
     gadgets.window.adjustHeight();
   },
@@ -261,11 +256,14 @@ xing.bikinibottom.Home.Inbox = Class.create({
 
 xing.bikinibottom.Home.Outbox = Class.create({
   ids: {
-    CONTAINER: "outbox"
+    CONTAINER: "outbox",
+    FLASH_CONTAINER: "flash-player",
+    FLASH_LABEL: "flash-player-label"
   },
   
   OUTBOX_TEMPLATE: '<ul>#{messages}</ul>',
   MESSAGE_TEMPLATE: '<li><a href="##{id}">#{subject}</a>To: #{recipient} (#{date})</li>',
+  FLASH_URL: "http://localhost:8080/bikinibottom_os/liverecord.swf?action=play",
   
   initialize: function() {
     this.parent = parent;
@@ -319,7 +317,7 @@ xing.bikinibottom.Home.Outbox = Class.create({
       }
       
       // Put it in the dom tree
-      this.container.innerHTML = this.OUTBOX_TEMPLATE.interpolate({
+      $('outbox-list').innerHTML = this.OUTBOX_TEMPLATE.interpolate({
         messages: html.join("")
       });
       
@@ -345,5 +343,15 @@ xing.bikinibottom.Home.Outbox = Class.create({
   
   _showMovieFor: function(movieId) {
   	console.log(movieId);
+  	$('outbox-list').hide();
+  	if (gadgets.flash.getMajorVersion() >= 10) {
+      gadgets.flash.embedFlash(
+        this.FLASH_URL + "&videoId=" + movieId,
+        this.ids.FLASH_CONTAINER,
+        10,
+        { width: 303, height: 227 }
+      );
+    }
+    gadgets.window.adjustHeight(); 	
   }
 });
