@@ -43,7 +43,8 @@ xing.bikinibottom.Home.New = Class.create({
   },
   
   classNames: {
-    MINI_MESSAGE: "mini-message"
+    MINI_MESSAGE: "mini-message",
+    ERROR_MESSAGE: "error-message"
   },
   
   KEY_TEMPLATE: "message_#{friendId}_#{ownerId}_#{date}",
@@ -135,8 +136,21 @@ xing.bikinibottom.Home.New = Class.create({
   },
   
   _addVideo: function() {
+    var msg;
+    
     // this needs to be generated here, since we're calling the flash with these params
     this._formData = this._form.serialize(true);
+    
+    if (!this._formData.recipient) {
+      msg = new gadgets.MiniMessage(xing.bikinibottom.moduleId);
+      msgElem = msg.createTimerMessage(
+        "Please select a recipient. [RES]", 5
+      );
+      $(msgElem).addClassName(this.classNames.MINI_MESSAGE).addClassName(this.classNames.ERROR_MESSAGE);
+      gadgets.window.adjustHeight();
+      return;
+    }
+    
     // Get recipient name for confirmation message
     this._recipientName = this._contactChooser.down("[value='" + this._formData.recipient + "']").innerHTML;
     this.currentVideoKey = this._generateKey(this._owner.getId(), this._formData.recipient);
@@ -172,7 +186,8 @@ xing.bikinibottom.Home.New = Class.create({
       timestamp: (new Date).getTime(),
       sender: this._owner.getId(),
       subject: (this._formData.subject || "Untitled [RES]").escapeHTML(),
-      recipient: this._recipientName
+      recipient: this._formData.recipient,
+      recipientName: this._recipientName
     };
     
     this._form.getElements().invoke("disable");
@@ -211,7 +226,6 @@ xing.bikinibottom.Home.New = Class.create({
     this._form.subject.clear();
     this.submitButton.setValue("Add Video [RES]");
     this._form.getElements().invoke("enable");
-    
     // update size of gadget
     gadgets.window.adjustHeight();
   },
@@ -257,15 +271,26 @@ xing.bikinibottom.Home.Inbox = Class.create({
 
 xing.bikinibottom.Home.Outbox = Class.create({
   ids: {
-    CONTAINER: "outbox"
+    CONTAINER: "outbox",
+    FLASH_CONTAINER: "outbox-flash-player",
+    LIST: "outbox-list",
+    BACK: "outbox-flash-payer-back",
+    MESSAGE_HEADLINE: "outbox-flash-player-label",
+    MESSAGE_DETAIL: "outbox-message-player"
   },
   
   OUTBOX_TEMPLATE: '<ul>#{messages}</ul>',
-  MESSAGE_TEMPLATE: '<li><a href="##{id}">#{subject}</a>To: #{recipient} (#{date})</li>',
+  FLASH_URL: "http://localhost:8080/bikinibottom_os/liverecord.swf?action=play",
+  MESSAGE_TEMPLATE: '<li><a href="##{id}">#{subject}</a>To: #{recipientName} (#{date})</li>',
+  MAX_ENTRIES: 4,
   
   initialize: function() {
     this.parent = parent;
     this.container = $(this.ids.CONTAINER);
+    this.list = $(this.ids.LIST);
+    this.messageDetail = $(this.ids.MESSAGE_DETAIL);
+    this.headline = $(this.ids.MESSAGE_HEADLINE);
+    this.backButton = $(this.ids.BACK);
   },
   
   getTabData: function() {
@@ -279,52 +304,75 @@ xing.bikinibottom.Home.Outbox = Class.create({
   
   _loadTab: function() {
     this._loadMessages();
+    this._showMessages();
     
-    this._tabLoaded = true;
-  },
-  
-  _loadMessages: function() {
-    var req, viewerSpec;
-    
-    req = opensocial.newDataRequest();
-    viewerSpec = opensocial.newIdSpec({ userId: "OWNER", groupId: "SELF" });
-    req.add(req.newFetchPersonAppDataRequest(viewerSpec, "*"), "messages");
-    req.send(this._renderMessages.bind(this));
-  },
-  
-  _renderMessages: function(data) {
-    if (data.hadError()) {
-      alert("error retrieving messages... w000t!");
+    if (this._tabLoaded) {
       return;
     }
     
-    var messages, outbox, messageObj, i, json, html;
+    this._tabLoaded = true;
+    this._observeBackButton();
+  },
+  
+  _loadMessages: function() {
+    xing.bikinibottom.SocialData.getSentMessages(this._renderMessages.bind(this), true);
+  },
+  
+  _renderMessages: function(messages) {
+    var html;
+    this.messages = messages.slice(0, this.MAX_ENTRIES);
+    html = this.messages.map(this._getMessageEntry.bind(this)).join("");
+    this.list.innerHTML = this.OUTBOX_TEMPLATE.interpolate({
+      messages: html
+    });
     
-    messages = data.get("messages").getData();
-    html = [];
+    // observer links of messages
+    this._observeMessagesLinks();
+    gadgets.window.adjustHeight();
     
-    xing.bikinibottom.SocialData.getOwner(function(owner) {
-      outbox = messages[owner.getId()];
-      for (id in outbox) {
-        json = gadgets.util.unescapeString(outbox[id]);
-        json = gadgets.json.parse(json);
-        messageObj = Object.extend(json, {
-          id: id,
-          date: new Date(json.timestamp).toGMTString()
-        });
-        html.push(this._getMessageEntry(messageObj));
-      }
-      
-      // Put it in the dom tree
-      this.container.innerHTML = this.OUTBOX_TEMPLATE.interpolate({
-        messages: html.join("")
-      });
-      
-      gadgets.window.adjustHeight();
-    }.bind(this));
+    // TODO lazy load thumbnail urls and profile urls and bin them with the message recipients
   },
   
   _getMessageEntry: function(messageObj) {
     return this.MESSAGE_TEMPLATE.interpolate(messageObj);
+  },
+  
+  _observeMessagesLinks: function() {
+    this.list.select("a").invoke("observe", "click", function(event){
+      this._showMovieFor(Event.element(event).hash.replace("#", ""));
+    }.bind(this));
+  },
+  
+  _observeBackButton: function() {
+    this.backButton.observe("click", function(event){
+      this._showMessages();
+      gadgets.window.adjustHeight();
+      event.stop();
+    }.bind(this));
+  },
+  
+  _showMessages: function() {
+    this.list.show();
+    this.messageDetail.hide();
+  },
+  
+  _showMovieFor: function(movieId) {
+    var i;
+    if (gadgets.flash.getMajorVersion() >= 10) {
+      gadgets.flash.embedFlash(
+        this.FLASH_URL + "&videoId=" + movieId,
+        this.ids.FLASH_CONTAINER,
+        10,
+        { width: 303, height: 227 }
+      );
+    }
+    
+    i = this.messages.pluck("id").indexOf(movieId);
+    this.headline.innerHTML = this.headline.innerHTML.interpolate(this.messages[i]);
+    
+    this.list.hide();
+    this.messageDetail.show();
+    
+    gadgets.window.adjustHeight();
   }
 });

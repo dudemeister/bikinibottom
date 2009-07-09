@@ -4,9 +4,9 @@
     <Require feature="opensocial-0.8" />
     <Require feature="dynamic-height" />
     <Require feature="flash" />
-    <Require feature="settitle" />
     <Require feature="tabs" />
-    <Require feature="minimessage"/>
+    <Require feature="minimessage" />
+    <Require feature="views" />
   </ModulePrefs>
   <!--
     Please note:
@@ -43,7 +43,7 @@
           <form id="message-form">
             <label for="recipient">Recipient [RES]</label>
             <select id="recipient" name="recipient">
-              <option>-- Please select [RES] --</option>
+              <option value="">-- Please select [RES] --</option>
             </select>
             <label for="subject">Subject [RES]</label>
             <input type="text" id="subject" name="subject" value="" />
@@ -69,7 +69,16 @@
         
         <div id="inbox" style="display: none;">Inbox</div>
         
-        <div id="outbox" style="display: none;"></div>
+        <div id="outbox" style="display: none;">
+          <div id="outbox-list"></div>
+          <div id="outbox-message-player" style="display: none;">
+            <h3 id="outbox-flash-player-label">#{subject} <br /><span>(#{recipientName}, #{date})</span></h3>
+            <div id="outbox-flash-player">You need at least flash player version 10 to record a video. Get it <a href="http://get.adobe.com/de/flashplayer/" target="_blank">here</a>. [RES]</div>
+            <div>
+              &laquo; <a id="outbox-flash-payer-back" class="back-link" href="#">back [RES]</a>
+            </div>
+          </div>
+        </div>
         
         <script type="text/javascript" charset="utf-8">
           gadgets.util.registerOnLoadHandler(function() {
