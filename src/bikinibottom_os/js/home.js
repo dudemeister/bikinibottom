@@ -211,7 +211,7 @@ xing.bikinibottom.Home.New = Class.create({
     this._form.subject.clear();
     this.submitButton.setValue("Add Video [RES]");
     this._form.getElements().invoke("enable");
-    
+
     // update size of gadget
     gadgets.window.adjustHeight();
   },
