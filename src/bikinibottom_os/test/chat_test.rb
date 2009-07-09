@@ -58,4 +58,9 @@ class TestChat < Test::Unit::TestCase
     assert_equal '1_2', chat.chat_id
   end
   
+  def test_chat_id_should_not_have_dots
+    chat = Chat.new(1, 2)
+    assert_no_match /\./, chat.chat_id
+  end
+  
 end

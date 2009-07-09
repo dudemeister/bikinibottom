@@ -13,7 +13,7 @@ class User
   end
   
   def create_message_queue
-    $amq.queue("queue_for_user_#{@user_id}")
+    $amq.queue("queue_for_user_#{@user_id.gsub('.', '-')}")
   end
 
   class << self

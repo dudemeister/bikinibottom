@@ -66,9 +66,10 @@ DispatchingSystem.prototype = {
     console.log(raw_data + ' wurde empfangen.');
     
     // make it a first class object
-    //eval("var message = " + raw_data);
-    
-    $('text-chat-conversation').innerHTML = $('text-chat-conversation').innerHTML + '<p class="message">' + raw_data + '</p>';
+    eval("var data = " + raw_data);
+      var p = new Element('p', { 'id': pId, 'class': 'message'}).update(data['message']);
+      $('text-chat-conversation').insert(p, {'position': 'top'});
+      gadgets.window.adjustHeight();
     
     //switch(message.x_target) {
     //  // special case: on initial successful connection this sets the socket_id

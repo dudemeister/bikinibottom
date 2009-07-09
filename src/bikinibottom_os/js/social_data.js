@@ -27,18 +27,17 @@ xing.bikinibottom.SocialData = {
   
   getOwnerFriends: function(callback, forceLoading) {
     callback = callback || function() {};
-    
+    console.log(callback);
     if (this._friends && !forceLoading) {
       return callback(this._friends);
     }
-    
     var req, friendsSpec;
-    
     req = opensocial.newDataRequest();
     
     friendsSpec = opensocial.newIdSpec({ userId: "OWNER", groupId: "FRIENDS" });
     friendsParams = {};
     friendsParams[opensocial.DataRequest.PeopleRequestFields.MAX] = 100;
+    
     req.add(req.newFetchPeopleRequest(friendsSpec, friendsParams), "friends");
     req.send(function(data) {
       if (data.hadError()) {
@@ -46,8 +45,8 @@ xing.bikinibottom.SocialData = {
       }
       
       this._friends = data.get("friends").getData();
-      
       callback(this._friends);
+      
     }.bind(this));
   }
 };

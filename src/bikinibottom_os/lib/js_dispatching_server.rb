@@ -35,9 +35,11 @@ module JsDispatchingServer
         User.add_online(data['sender'], @key)
         log("#{data['sender']} sent 'ping'")
         
-      when 'message' 
-        chat = Chat.find_or_create(data['sender'], data['recipient'], self)
+      when 'message'
+        chat = Chat.find_or_create(data['sender'], data['recipient'])
         msg = "Found chat #{chat.chat_id}(#{chat.object_id}) for #{chat.user_1} and #{chat.user_2}"
+        bind_user_queue_to_topic(data['sender'], chat) if !@subscribed
+        
         log(msg)
         chat.new_message_from(data['sender'], data['message'])
 
@@ -46,6 +48,28 @@ module JsDispatchingServer
     end
 
   end
+  
+  def bind_user_queue_to_topic(user_id, chat)
+      user = User.find(user_id) 
+      p user.queue
+      user.queue.bind(@topic, :key => "chat_for_users_#{chat.chat_id}").subscribe do |msg|
+        puts "got message: #{msg}"
+        msg = JSON(msg)
+        send_data(msg.to_json + "\0") unless User.find(msg['sender']).socket_id == @key
+      end
+      
+      @subscribed = true
+      
+    #end
+    #  message = JSON(msg)
+    #  sender_socket_id = message['socket_id']
+    #  message.merge!({:x_target => 'cc.receiveMessage'})
+    #  if sender_socket_id && sender_socket_id.to_i != @key
+    #    log('sending data out: ' + message.to_s + ' ' + sender_socket_id)
+    #    
+    #  end
+  end
+  
   
   def unbind
     log("connection #{@key} closed")

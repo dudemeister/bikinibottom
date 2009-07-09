@@ -64,14 +64,15 @@ xing.bikinibottom.Home.TextChat = Class.create({
   },
   
   _dataCallback: function(friends) {
-    console.log('_dataCallback');
+    console.log('_dataCallback xxx');
     this._friends = friends;
     
     this._renderRecipients();
     
     this._form.getElements().invoke("enable");
     
-    this._sendPing(); // needs OSO owner, so only done here
+    // needs OSO owner, so only done here. also need to wait until flash socket is ready
+    window.setTimeout((function() { this._sendPing(); }).bind(this), 2000);
   },
   
   _renderRecipients: function() {
@@ -109,6 +110,7 @@ xing.bikinibottom.Home.TextChat = Class.create({
   },
   
   _sendPing: function() {
+    console.log('_sendPing');
     data = {
       cmd: 'ping',
       sender: this._owner.getId()
