@@ -3,7 +3,7 @@
  * This JavaScript file is for Home view.
  */
 var xing = xing || {};
-xing.bikinibottom = {};
+xing.bikinibottom = xing.bikinibottom || {};
 
 xing.bikinibottom.Home = {
   initialize: function(settings) {
@@ -81,25 +81,15 @@ xing.bikinibottom.Home.New = Class.create({
   },
   
   _loadData: function() {
-    var req, friendsSpec, friendsParams, ownerSpec, ownerParams;
-    
-    req = opensocial.newDataRequest();
-    
-    ownerSpec = opensocial.IdSpec.PersonId.OWNER;
-    ownerParams = {};
-    req.add(req.newFetchPersonRequest(ownerSpec, ownerParams), "owner");
-    
-    friendsSpec = opensocial.newIdSpec({ userId: "VIEWER", groupId: "FRIENDS" });
-    friendsParams = {};
-    friendsParams[opensocial.DataRequest.PeopleRequestFields.MAX] = 100;
-    req.add(req.newFetchPeopleRequest(friendsSpec, friendsParams), "friends");
-    
-    req.send(this._dataCallback.bind(this));
+    xing.bikinibottom.SocialData.getOwner(function(owner) {
+      this._owner = owner;
+      
+      xing.bikinibottom.SocialData.getOwnerFriends(this._dataCallback.bind(this));
+    }.bind(this));
   },
   
-  _dataCallback: function(data) {
-    this._owner = data.get("owner").getData();
-    this._friends = data.get("friends").getData();
+  _dataCallback: function(friends) {
+    this._friends = friends;
     
     this._renderRecipients();
     
@@ -251,7 +241,8 @@ xing.bikinibottom.Home.Outbox = Class.create({
     CONTAINER: "outbox"
   },
   
-  MESSAGE_TEMPLATE: '<li><a href="#">#{subject}</a>#{sender} (#{date})</li>',
+  OUTBOX_TEMPLATE: '<ul>#{messages}</ul>',
+  MESSAGE_TEMPLATE: '<li><a href="##{id}">#{subject}</a>#{sender} (#{date})</li>',
   
   initialize: function() {
     this.parent = parent;
@@ -281,7 +272,7 @@ xing.bikinibottom.Home.Outbox = Class.create({
     var req, viewerSpec;
     
     req = opensocial.newDataRequest();
-    viewerSpec = opensocial.newIdSpec({ userId: "VIEWER", groupId: "SELF" });
+    viewerSpec = opensocial.newIdSpec({ userId: "OWNER", groupId: "SELF" });
     req.add(req.newFetchPersonAppDataRequest(viewerSpec, "*"), "messages");
     req.send(this._renderMessages.bind(this));
   },
@@ -292,7 +283,31 @@ xing.bikinibottom.Home.Outbox = Class.create({
       return;
     }
     
-    console.log(data.get("messages").getData("messages"));
+    var messages, outbox, messageObj, i, json, html;
+    
+    messages = data.get("messages").getData();
+    html = [];
+    
+    xing.bikinibottom.SocialData.getOwner(function(owner) {
+      outbox = messages[owner.getId()];
+      for (id in outbox) {
+        json = gadgets.util.unescapeString(outbox[id]);
+        json = gadgets.json.parse(json);
+        messageObj = Object.extend(json, {
+          id: id,
+          date: new Date(json.timestamp).toGMTString()
+        });
+        html.push(this._getMessageEntry(messageObj));
+      }
+      
+      // Put it in the dom tree
+      this.container.innerHTML = this.OUTBOX_TEMPLATE.interpolate({
+        messages: html.join("")
+      });
+    }.bind(this));
+  },
+  
+  _getMessageEntry: function(messageObj) {
+    return this.MESSAGE_TEMPLATE.interpolate(messageObj);
   }
 });
-

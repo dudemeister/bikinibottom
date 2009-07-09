@@ -56,29 +56,18 @@ xing.bikinibottom.Home.TextChat = Class.create({
   },
   
   _loadData: function() {
-    console.log('_loadData');
-    var req, friendsSpec, friendsParams, ownerSpec, ownerParams;
-    
-    req = opensocial.newDataRequest();
-    
-    ownerSpec = opensocial.IdSpec.PersonId.OWNER;
-    ownerParams = {};
-    req.add(req.newFetchPersonRequest(ownerSpec, ownerParams), "owner");
-    
-    friendsSpec = opensocial.newIdSpec({ userId: "VIEWER", groupId: "FRIENDS" });
-    friendsParams = {};
-    friendsParams[opensocial.DataRequest.PeopleRequestFields.MAX] = 100;
-    req.add(req.newFetchPeopleRequest(friendsSpec, friendsParams), "friends");
-    
-    req.send(this._dataCallback.bind(this));
+    xing.bikinibottom.SocialData.getOwner(function(owner) {
+      this._owner = owner;
+      
+      xing.bikinibottom.SocialData.getOwnerFriends(this._dataCallback.bind(this));
+    }.bind(this));
   },
   
-  _dataCallback: function(data) {
-    console.log('_dataCallback');
-    this._owner = data.get("owner").getData();
-    this._friends = data.get("friends").getData();
+  _dataCallback: function(friends) {
+    this._friends = friends;
     
-    this._renderRecipients();    
+    this._renderRecipients();
+    
     this._form.getElements().invoke("enable");
   },
   

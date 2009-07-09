@@ -1,4 +1,4 @@
-form {
+form, ul {
   padding: 5px;
   width: 303px;
   margin: 0 auto;
@@ -21,4 +21,23 @@ form label {
 
 #flash-recorder {
   margin-bottom: 6px;
+}
+
+ul li {
+  color: #999;
+  border-bottom: 1px solid #D8D8D8;
+  height: 40px;
+  margin: 0 0 2px;
+  overflow: hidden;
+  padding: 0 5px 2px 8px;
+}
+
+ul li:last-child {
+  border-bottom: 0 none;
+}
+
+ul li a {
+  color: #000;
+  font-weight: bold;
+  display: block;
 }

@@ -28,6 +28,7 @@
           }
         </script>
         <script src="http://localhost:8080/bikinibottom_os/js/common.js" type="text/javascript" charset="utf-8"></script>
+        <script src="http://localhost:8080/bikinibottom_os/js/social_data.js" type="text/javascript" charset="utf-8"></script>
         <script src="http://localhost:8080/bikinibottom_os/js/home.js" type="text/javascript" charset="utf-8"></script>
         <script src="http://localhost:8080/bikinibottom_os/js/text_chat.js" type="text/javascript" charset="utf-8"></script>
       </head>
@@ -69,7 +70,7 @@
         
         <div id="inbox" style="display: none;">Inbox</div>
         
-        <div id="outbox" style="display: none;">Outbox</div>
+        <div id="outbox" style="display: none;"></div>
         
         <script type="text/javascript" charset="utf-8">
           gadgets.util.registerOnLoadHandler(function() {
