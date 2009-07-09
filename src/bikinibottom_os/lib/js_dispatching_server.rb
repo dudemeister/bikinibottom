@@ -3,6 +3,11 @@
 require 'rubygems'
 require 'eventmachine'
 require 'json'
+require 'ruby-debug'
+
+require File.join(File.dirname(__FILE__), 'chat')
+
+Debugger.start
 
 # this is here to make sure environment.rb doens't recreate the EventMachine Loop
 RUN_FROM_DISPATCHER = true
@@ -29,8 +34,8 @@ module JsDispatchingServer
       end
     else
       data = JSON.parse(data.chomp("\000"))
-      log(data)
-      send_data("HELLO FROM receive_data")
+      chat = Chat.find_or_create(data['sender'], data['recipient'])      
+      send_data("chat for #{data['sender']} and #{data['recipient']} is #{chat.id}\000")
     end
     
   end

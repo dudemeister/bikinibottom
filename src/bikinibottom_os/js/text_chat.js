@@ -78,8 +78,7 @@ xing.bikinibottom.Home.TextChat = Class.create({
     this._owner = data.get("owner").getData();
     this._friends = data.get("friends").getData();
     
-    this._renderRecipients();
-    
+    this._renderRecipients();    
     this._form.getElements().invoke("enable");
   },
   
@@ -112,7 +111,7 @@ xing.bikinibottom.Home.TextChat = Class.create({
         message: this._messageInput.value
       };
       console.log('Sending data: ' + $H(data).toJSON());
-      Dispatcher.sendMessage($H(data).toJSON());
+      Dispatcher.sendMessage($H(data).toJSON() + "\000");
     }.bind(this));
   }
   

@@ -18,12 +18,22 @@ class Chat
   end
 
   class << self
+    
+    def clear_chats!
+      @@chats = {}
+    end
+    
     def exists?(user_1, user_2)
       !!find(user_1, user_2)
     end
 
     def find(user_1, user_2)
+      @@chats ||= {}
       @@chats[chat_id(user_1, user_2)]
+    end
+    
+    def find_or_create(user_1, user_2)
+      find(user_1, user_2) || new(user_1, user_2)
     end
     
     # class

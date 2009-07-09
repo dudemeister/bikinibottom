@@ -51,7 +51,7 @@
               <option>-- Please select [RES] --</option>
             </select>
             <label for="text-chat-message">Message [RES]</label>
-            <input type="text" id="text-chat-message" name="text-chat-message" value="" />
+            <input type="text" id="text-chat-message" name="text-chat-message" value="TEXT CHAT MESSAGE" />
             <input type="submit" name="text-chat-send" value="Send [RES]" />
           </form>
         </div>

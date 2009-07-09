@@ -1,8 +1,13 @@
+require 'rubygems'
 require 'test/unit'
-#require 'mocha'
-require '../lib/chat'
+require 'mocha'
+require File.join(File.dirname(__FILE__), '../lib/chat')
 
 class TestChat < Test::Unit::TestCase
+
+  def setup
+    Chat.clear_chats!
+  end
   
   def test_exists
     chat = Chat.new(1, 2)
@@ -34,9 +39,23 @@ class TestChat < Test::Unit::TestCase
     assert_equal nil, Chat.find(1, 3)
   end
   
-  def test_message_to
-    chat = Chat.new(1, 2)
-    chat.message_to(2, 'Hello 2')
+  #def test_message_to
+  #  chat = Chat.new(1, 2)
+  #  chat.message_to(2, 'Hello 2')
+  #end
+  
+  def test_find_or_create
+    assert_equal nil, Chat.find(1, 2)
+    Chat.expects(:new)
+    Chat.find_or_create(1, 2)
+  end
+  
+  def test_find_or_create_only_once
+    assert_equal nil, Chat.find(1, 2)
+    Chat.new(1, 2)
+    Chat.expects(:new).never
+    chat = Chat.find_or_create(1, 2)
+    assert_equal '1_2', chat.chat_id
   end
   
 end
