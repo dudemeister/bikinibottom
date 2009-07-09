@@ -48,6 +48,7 @@ xing.bikinibottom.Home.New = Class.create({
     FORM: "message-form",
     CONTACT_CHOOSER: "recipient",
     SUBMIT_BUTTON: "submit-new",
+    RESET_BUTTON: "reset-new",
     FLASH_CONTAINER: "flash-recorder",
     FLASH_LABEL: "flash-recorder-label"
   },
@@ -64,7 +65,6 @@ xing.bikinibottom.Home.New = Class.create({
   initialize: function() {
     this.parent = parent;
     this.container = $(this.ids.CONTAINER);
-    this.submitButton = $(this.ids.SUBMIT_BUTTON);
   },
   
   getTabData: function() {
@@ -93,8 +93,10 @@ xing.bikinibottom.Home.New = Class.create({
   _initElements: function() {
     this._form = $(this.ids.FORM);
     this._contactChooser = $(this.ids.CONTACT_CHOOSER);
+    this._submitButton = $(this.ids.SUBMIT_BUTTON);
+    this._resetButton = $(this.ids.RESET_BUTTON);
     
-    this._form.getElements().invoke("disable");
+    this._disableForm();
   },
   
   _loadData: function() {
@@ -110,7 +112,7 @@ xing.bikinibottom.Home.New = Class.create({
     
     this._renderRecipients();
     
-    this._form.getElements().invoke("enable");
+    this._enableForm();
   },
   
   _renderRecipients: function() {
@@ -137,6 +139,7 @@ xing.bikinibottom.Home.New = Class.create({
     this._contactChooser.observe("change", function(event) {
       this._form.subject.focus();
     }.bind(this));
+    
     this._form.observe("submit", function(event) {
       event.stop();
       if(this.videoAdded) {
@@ -145,6 +148,8 @@ xing.bikinibottom.Home.New = Class.create({
         this._addVideo();
       }
     }.bind(this));
+    
+    this._form.observe("reset", this._resetVideoForm.bind(this));
   },
   
   _addVideo: function() {
@@ -187,13 +192,13 @@ xing.bikinibottom.Home.New = Class.create({
     gadgets.window.adjustHeight();
     
     this.videoAdded = true;
-    this._form.getElements().invoke("disable");
-    this.submitButton.setValue("waiting for video... [RES]");
+    this._disableForm();
+    this._submitButton.setValue("waiting for video... [RES]");
   },
   
   _videoAddedCallback: function() {
-    this.submitButton.setValue("Send video [RES]");
-    this.submitButton.enable();
+    this._submitButton.setValue("Send video [RES]");
+    this._submitButton.enable().focus();
   },
   
   _submit: function() {
@@ -207,7 +212,7 @@ xing.bikinibottom.Home.New = Class.create({
       recipientName: this._recipientName
     };
     
-    this._form.getElements().invoke("disable");
+    this._disableForm();
     
     req = opensocial.newDataRequest();
     recipientSpec = "VIEWER";
@@ -241,8 +246,9 @@ xing.bikinibottom.Home.New = Class.create({
     // reset contactChooser
     this._contactChooser.down().selected = true;
     this._form.subject.clear();
-    this.submitButton.setValue("Add Video [RES]");
-    this._form.getElements().invoke("enable");
+    this._submitButton.setValue("Add Video [RES]");
+    this._enableForm();
+    
     // update size of gadget
     gadgets.window.adjustHeight();
   },
@@ -253,6 +259,14 @@ xing.bikinibottom.Home.New = Class.create({
       friendId: friendId,
       date: (new Date).getTime()
     });
+  },
+  
+  _enableForm: function() {
+    this._form.getElements().invoke("enable");
+  },
+  
+  _disableForm: function() {
+    this._form.getElements().without(this._resetButton).invoke("disable");
   }
 });
 
@@ -387,8 +401,6 @@ xing.bikinibottom.Home.Inbox = Class.create(xing.bikinibottom.Home.MessageList, 
     this.messageDetail = $(this.ids.MESSAGE_DETAIL);
     this.headline = $(this.ids.MESSAGE_HEADLINE);
     this.backButton = $(this.ids.BACK);
-    
-    this.prefs = new gadgets.Prefs();
   },
   
   getTabData: function() {
@@ -412,9 +424,11 @@ xing.bikinibottom.Home.Inbox = Class.create(xing.bikinibottom.Home.MessageList, 
   },
   
   _markUnReadMessages: function() {
-    this._readMessages = this.prefs.getString("read_messages").split(this.DELIMITER);
-    this._readMessages.each(function(messageId) {
-      this.list.select("a[href='#" + messageId + "']").invoke("removeClassName", this.classNames.UNREAD);
+    xing.bikinibottom.SocialData.getReadMessages(function(readMessages) {
+      this._readMessages = readMessages;
+      this._readMessages.each(function(messageId) {
+        this.list.select("a[href='#" + messageId + "']").invoke("removeClassName", this.classNames.UNREAD);
+      }.bind(this));
     }.bind(this));
   },
   
@@ -425,8 +439,8 @@ xing.bikinibottom.Home.Inbox = Class.create(xing.bikinibottom.Home.MessageList, 
   },
   
   _markAsRead: function(messageId) {
-    this._readMessages = this._readMessages.without(messageId);
-    this.prefs.set("read_messages", this._readMessages.join(this.DELIMITER));
+    this._readMessages.push(messageId);
+    xing.bikinibottom.SocialData.setReadMessages(this._readMessages);
     this.list.down("a[href='#" + messageId + "']").removeClassName(this.classNames.UNREAD);
   }
 });

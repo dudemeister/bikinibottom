@@ -7,9 +7,7 @@
     <Require feature="tabs" />
     <Require feature="minimessage" />
     <Require feature="views" />
-    <Require feature="setprefs" />
   </ModulePrefs>
-  <UserPref name="read_messages" default_value="" datatype="hidden" />
   <!--
     Please note:
     Wordings are marked with "[RES]" to outsource them later into
@@ -22,7 +20,7 @@
       <head>
         <link rel="stylesheet" href="http://localhost:8080/bikinibottom_os/css/common.css" type="text/css" charset="utf-8" />
         <link rel="stylesheet" href="http://localhost:8080/bikinibottom_os/css/home.css" type="text/css" charset="utf-8" />
-        <script src="http://ajax.googleapis.com/ajax/libs/prototype/1.6.0.3/prototype.js" type="text/javascript" charset="utf-8"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/prototype/1.6.0.3/prototype.js" type="text/javascript" charset="utf-8"></script>
         <script type="text/javascript" charset="utf-8">
           // Mock OSDE
           if (gadgets.util.getUrlParameters().container = "default") {
@@ -48,10 +46,10 @@
               <option value="">-- Please select [RES] --</option>
             </select>
             <label for="subject">Subject [RES]</label>
-            <input type="text" id="subject" name="subject" value="" />
+            <input type="text" id="subject" name="subject" value="" maxlength="50" />
             <label id="flash-recorder-label" for="flash-recorder" style="display: none;">Video message [RES]</label>
             <div id="flash-recorder" style="display: none;">You need at least flash player version 10 to record a video. Get it <a href="http://get.adobe.com/de/flashplayer/" target="_blank">here</a>. [RES]</div>
-            <input id="submit-new" type="submit" name="submit-new" value="Add Video [RES]" />
+            <input id="submit-new" type="submit" name="submit-new" value="Add Video [RES]" /> <input id="reset-new" type="reset" name="reset-new" value="Reset [RES]" /> 
           </form>
         </div>
         
