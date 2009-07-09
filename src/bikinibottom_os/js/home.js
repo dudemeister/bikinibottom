@@ -42,6 +42,10 @@ xing.bikinibottom.Home.New = Class.create({
     FLASH_LABEL: "flash-recorder-label"
   },
   
+  classNames: {
+    MINI_MESSAGE: "mini-message"
+  },
+  
   KEY_TEMPLATE: "message_#{friendId}_#{ownerId}_#{date}",
   RECIPIENT_TEMPLATE: '<option value="#{id}">#{displayName}</option>',
   FLASH_URL: "http://localhost:8080/bikinibottom_os/liverecord.swf?action=record",
@@ -117,9 +121,9 @@ xing.bikinibottom.Home.New = Class.create({
   },
   
   _observe: function() {
-  	this._contactChooser.observe("change", function(event) {
-  		this._form.subject.focus();
-  	}.bind(this));
+    this._contactChooser.observe("change", function(event) {
+      this._form.subject.focus();
+    }.bind(this));
     this._form.observe("submit", function(event) {
       event.stop();
       if(this.videoAdded) {
@@ -133,6 +137,8 @@ xing.bikinibottom.Home.New = Class.create({
   _addVideo: function() {
     // this needs to be generated here, since we're calling the flash with these params
     this._formData = this._form.serialize(true);
+    // Get recipient name for confirmation message
+    this._recipientName = this._contactChooser.down("[value='" + this._formData.recipient + "']").innerHTML;
     this.currentVideoKey = this._generateKey(this._owner.getId(), this._formData.recipient);
     
     if (gadgets.flash.getMajorVersion() >= 10) {
@@ -156,12 +162,12 @@ xing.bikinibottom.Home.New = Class.create({
   },
   
   _videoAddedCallback: function() {
-  	this.submitButton.setValue("send video [RES]");
-  	this.submitButton.enable();
+    this.submitButton.setValue("Send video [RES]");
+    this.submitButton.enable();
   },
   
   _submit: function() {
-    var req, value, key, recipientSpec;
+    var req, value, recipientSpec;
     value = {
       timestamp: (new Date).getTime(),
       sender: this._owner.getId(),
@@ -178,24 +184,31 @@ xing.bikinibottom.Home.New = Class.create({
   
   _submitCallback: function(data) {
     if (data.get("message_saving").hadError()) {
-      alert("error!");
+      alert("error saving message... w000t!");
     } else {
-    	var msg = new gadgets.MiniMessage(xing.bikinibottom.moduleId);
-    	msg.createTimerMessage("[RES] You have succesfully sent a video message to: " + this._formData.recipient, 10);
-    	this._resetVideoForm();
+      var msg, msgElem;
+      
+      msg = new gadgets.MiniMessage(xing.bikinibottom.moduleId);
+      msgElem = msg.createTimerMessage(
+        "You have succesfully sent a video message to: " + this._recipientName + " [RES]", 10
+      );
+      $(msgElem).addClassName(this.classNames.MINI_MESSAGE);
+      
+      this._resetVideoForm();
     }
   },
   
   _resetVideoForm: function() {
-  	this.videoAdded = false;
-  	// remove the flash video
-  	$('flash-recorder').childElements()[0].remove();
-  	gadgets.window.adjustHeight();
-  	// reset contactChooser
-  	this._contactChooser.down().selected = true;
-  	this._form.subject.clear();
-  	this.submitButton.setValue("Add Video [RES]");
-  	this._form.getElements().invoke("enable");
+    this.videoAdded = false;
+    // remove the flash video
+    $(this.ids.FLASH_CONTAINER).update();
+    // reset contactChooser
+    this._contactChooser.down().selected = true;
+    this._form.subject.clear();
+    this.submitButton.setValue("Add Video [RES]");
+    this._form.getElements().invoke("enable");
+    // update size of gadget
+    gadgets.window.adjustHeight();
   },
   
   _generateKey: function(ownerId, friendId) {
@@ -260,10 +273,6 @@ xing.bikinibottom.Home.Outbox = Class.create({
   },
   
   _loadTab: function() {
-    if (this._tabLoaded) {
-      return;
-    }
-    
     this._loadMessages();
     
     this._tabLoaded = true;
@@ -280,7 +289,7 @@ xing.bikinibottom.Home.Outbox = Class.create({
   
   _renderMessages: function(data) {
     if (data.hadError()) {
-      alert("error retrieving messages");
+      alert("error retrieving messages... w000t!");
       return;
     }
     

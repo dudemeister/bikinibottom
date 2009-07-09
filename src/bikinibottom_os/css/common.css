@@ -51,3 +51,12 @@ body {
 label {
   font-weight: bold;
 }
+
+.mini-message {
+  margin: 6px 0;
+}
+
+.mini-message td {
+  font-size: 11px;
+  padding: 2px;
+}
