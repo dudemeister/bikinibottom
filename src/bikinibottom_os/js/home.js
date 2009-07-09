@@ -190,6 +190,7 @@ xing.bikinibottom.Home.New = Class.create({
   	this.videoAdded = false;
   	// remove the flash video
   	$('flash-recorder').childElements()[0].remove();
+  	gadgets.window.adjustHeight();
   	// reset contactChooser
   	this._contactChooser.down().selected = true;
   	this._form.subject.clear();
