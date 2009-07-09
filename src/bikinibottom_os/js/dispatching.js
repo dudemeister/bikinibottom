@@ -13,7 +13,7 @@ DispatchingSystem.prototype = {
   
   // todo: create socket doesn't look as good as it should/could ;)
   "createSocket": function() {
-    var socket_html = '<object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="http://fpdownload.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=8,0,0,0" width="1" height="1" align="middle"><param name="allowScriptAccess" value="sameDomain"><param name="movie" value="/bikinibottom_os/socket.swf"><param name="quality" value="high"><param name="bgcolor" value="#FFFFFF">        <embed id="flash_socket" src="/bikinibottom_os/socket.swf" quality="high" bgcolor="#FFFFFF" width="20" height="20" name="flash_socket" align="middle" allowScriptAccess="sameDomain" type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/go/getflashplayer">    </object>';
+    var socket_html = '<object style="position: absolute; top: -500px" classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="http://fpdownload.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=8,0,0,0" width="1" height="1" align="middle"><param name="allowScriptAccess" value="sameDomain"><param name="movie" value="/bikinibottom_os/socket.swf"><param name="quality" value="high"><param name="bgcolor" value="#FFFFFF">        <embed id="flash_socket" src="/bikinibottom_os/socket.swf" quality="high" bgcolor="#FFFFFF" width="20" height="20" name="flash_socket" align="middle" allowScriptAccess="sameDomain" type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/go/getflashplayer">    </object>';
     Element.insert(document.body, socket_html);
     this.socket = document.getElementById('flash_socket');
   },

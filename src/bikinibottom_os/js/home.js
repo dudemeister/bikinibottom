@@ -171,7 +171,8 @@ xing.bikinibottom.Home.New = Class.create({
     value = {
       timestamp: (new Date).getTime(),
       sender: this._owner.getId(),
-      subject: this._formData.subject
+      subject: (this._formData.subject || "Untitled [RES]").escapeHTML(),
+      recipient: this._recipientName
     };
     
     this._form.getElements().invoke("disable");
@@ -200,13 +201,17 @@ xing.bikinibottom.Home.New = Class.create({
   
   _resetVideoForm: function() {
     this.videoAdded = false;
+    
     // remove the flash video
     $(this.ids.FLASH_CONTAINER).update();
+    $(this.ids.FLASH_CONTAINER, this.ids.FLASH_LABEL).invoke("hide");
+    
     // reset contactChooser
     this._contactChooser.down().selected = true;
     this._form.subject.clear();
     this.submitButton.setValue("Add Video [RES]");
     this._form.getElements().invoke("enable");
+    
     // update size of gadget
     gadgets.window.adjustHeight();
   },
@@ -256,7 +261,7 @@ xing.bikinibottom.Home.Outbox = Class.create({
   },
   
   OUTBOX_TEMPLATE: '<ul>#{messages}</ul>',
-  MESSAGE_TEMPLATE: '<li><a href="##{id}">#{subject}</a>#{sender} (#{date})</li>',
+  MESSAGE_TEMPLATE: '<li><a href="##{id}">#{subject}</a>To: #{recipient} (#{date})</li>',
   
   initialize: function() {
     this.parent = parent;
@@ -267,7 +272,7 @@ xing.bikinibottom.Home.Outbox = Class.create({
     return {
       name: "Outbox", // [RES]
       contentContainer: this.container,
-      tooltip: "Sent messages",  // [RES]
+      tooltip: "Sent messages", // [RES]
       callback: this._loadTab.bind(this)
     };
   },
@@ -314,6 +319,8 @@ xing.bikinibottom.Home.Outbox = Class.create({
       this.container.innerHTML = this.OUTBOX_TEMPLATE.interpolate({
         messages: html.join("")
       });
+      
+      gadgets.window.adjustHeight();
     }.bind(this));
   },
   
