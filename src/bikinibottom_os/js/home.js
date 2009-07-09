@@ -138,9 +138,18 @@ xing.bikinibottom.Home.New = Class.create({
   },
   
   _addVideo: function() {
+    // this needs to be generated here, since we're calling the flash with these params
+    this._formData = this._form.serialize(true);
+    this.currentVideoKey = this._generateKey(this._owner.getId(), this._formData.recipient);
+    value = {
+      timestamp: (new Date).getTime(),
+      sender: this._owner.getId(),
+      subject: this._formData.subject
+    };
+    
     if (gadgets.flash.getMajorVersion() >= 10) {
       gadgets.flash.embedFlash(
-        this.FLASH_URL,
+        this.FLASH_URL + "&videoId=" + this.currentVideoKey,
         this.ids.FLASH_CONTAINER,
         10,
         { width: 303, height: 227 }
@@ -154,25 +163,23 @@ xing.bikinibottom.Home.New = Class.create({
     gadgets.window.adjustHeight();
     
     this.videoAdded = true;
-    this.submitButton.setValue("Send [RES]");
+    this._form.getElements().invoke("disable");
+    this.submitButton.setValue("waiting for video... [RES]");
+  },
+  
+  _videoAddedCallback: function() {
+  	this.submitButton.setValue("send video [RES]");
+  	this.submitButton.enable();
   },
   
   _submit: function() {
     var req, value, key, recipientSpec;
     
-    this._formData = this._form.serialize(true);
     this._form.getElements().invoke("disable");
-    
-    key = this._generateKey(this._owner.getId(), this._formData.recipient);
-    value = {
-      timestamp: (new Date).getTime(),
-      sender: this._owner.getId(),
-      subject: this._formData.subject
-    };
     
     req = opensocial.newDataRequest();
     recipientSpec = "VIEWER";
-    req.add(req.newUpdatePersonAppDataRequest(recipientSpec, key, gadgets.json.stringify(value)), "message_saving");
+    req.add(req.newUpdatePersonAppDataRequest(recipientSpec, this.currentVideoKey, gadgets.json.stringify(value)), "message_saving");
     req.send(this._submitCallback.bind(this));
   },
   
@@ -180,9 +187,16 @@ xing.bikinibottom.Home.New = Class.create({
     if (data.get("message_saving").hadError()) {
       alert("error!");
     } else {
-      alert("sent!");
-      this._form.getElements().invoke("enable");
+      this._resetVideoForm();
     }
+  },
+  
+  _resetVideoForm: function() {
+  	this.videoAdded = false;
+  	// remove the flash video
+  	$('flash-recorder').childElements()[0].remove();
+  	this.submitButton.setValue("Add Video [RES]");
+  	this._form.getElements().invoke("enable");
   },
   
   _generateKey: function(ownerId, friendId) {
