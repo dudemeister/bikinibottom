@@ -11,6 +11,10 @@ form input[type=text] {
   display: block;
 }
 
+form input[type=text] {
+  width: 297px; /* 303px - 6px (border) */
+}
+
 form label {
   display: block;
 }
