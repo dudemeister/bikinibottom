@@ -53,6 +53,9 @@
             <label for="text-chat-message">Message [RES]</label>
             <input type="text" id="text-chat-message" name="text-chat-message" value="TEXT CHAT MESSAGE" />
             <input type="submit" name="text-chat-send" value="Send [RES]" />
+            <div id="text-chat-conversation" style="overflow:auto">
+            sddfsdf
+            </div>
           </form>
         </div>
         

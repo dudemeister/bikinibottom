@@ -34,10 +34,19 @@ module JsDispatchingServer
       end
     else
       data = JSON.parse(data.chomp("\000"))
-      chat = Chat.find_or_create(data['sender'], data['recipient'])      
-      send_data("chat for #{data['sender']} and #{data['recipient']} is #{chat.id}\000")
+      chat = Chat.find_or_create(data['sender'], data['recipient'])
+      msg = "Found chat #{chat.chat_id}(#{chat.id}) for #{chat.user_1} and #{chat.user_2}"
+      log(msg)
+      send_data(data['message'])
+      chat.send_message_from(data['sender'], data['message'])
     end
     
+  end
+  
+  # add \000 delimiter if not present. wraps send_data from EventMachine.
+  def send_data(message)
+    message = "#{message}\000" unless message =~ /\000$/
+    super(message)
   end
   
   def unbind

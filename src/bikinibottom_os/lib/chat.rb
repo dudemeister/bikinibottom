@@ -1,5 +1,7 @@
 class Chat
   
+  attr_reader :user_1, :user_2
+  
   def initialize(user_1, user_2)
     @user_1 = user_1
     @user_2 = user_2
@@ -13,7 +15,8 @@ class Chat
     self.class.chat_id(@user_1, @user_2)
   end
   
-  def message_to(user, message)
+  def send_message_from(sender, message)
+    puts "message from #{sender}: '#{message}'"
     @queue << message
   end
 

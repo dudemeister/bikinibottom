@@ -66,19 +66,21 @@ DispatchingSystem.prototype = {
     console.log(raw_data + ' wurde empfangen.');
     
     // make it a first class object
-    eval("var message = " + raw_data);
+    //eval("var message = " + raw_data);
     
-    switch(message.x_target) {
-      // special case: on initial successful connection this sets the socket_id
-      // to the message form
-      // todo: needs to be set globally
-      case "socket_id":
-        $('#tweet_socket_id').val(message.socket_id);
-        break;
-      default:
-        console.log('default handling: ' + message.x_target + '(message)');
-        eval(message.x_target + '(message)');
-    }
+    $('text-chat-conversation').innerHTML = $('text-chat-conversation').innerHTML + raw_data;
+    
+    //switch(message.x_target) {
+    //  // special case: on initial successful connection this sets the socket_id
+    //  // to the message form
+    //  // todo: needs to be set globally
+    //  case "socket_id":
+    //    $('#tweet_socket_id').val(message.socket_id);
+    //    break;
+    //  default:
+    //    console.log('default handling: ' + message.x_target + '(message)');
+    //    eval(message.x_target + '(message)');
+    //}
   },
 
   "parseMessage": function(data) {
