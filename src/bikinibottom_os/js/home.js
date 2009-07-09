@@ -127,6 +127,9 @@ xing.bikinibottom.Home.New = Class.create({
   },
   
   _observe: function() {
+  	this._contactChooser.observe("change", function(event) {
+  		this._form.subject.focus();
+  	}.bind(this));
     this._form.observe("submit", function(event) {
       event.stop();
       if(this.videoAdded) {
@@ -187,7 +190,9 @@ xing.bikinibottom.Home.New = Class.create({
     if (data.get("message_saving").hadError()) {
       alert("error!");
     } else {
-      this._resetVideoForm();
+    	var msg = new gadgets.MiniMessage(xing.bikinibottom.moduleId);
+    	msg.createTimerMessage("[RES] You have succesfully sent a video message to: " + this._formData.recipient, 10);
+    	this._resetVideoForm();
     }
   },
   
@@ -195,6 +200,9 @@ xing.bikinibottom.Home.New = Class.create({
   	this.videoAdded = false;
   	// remove the flash video
   	$('flash-recorder').childElements()[0].remove();
+  	// reset contactChooser
+  	this._contactChooser.down().selected = true;
+  	this._form.subject.clear();
   	this.submitButton.setValue("Add Video [RES]");
   	this._form.getElements().invoke("enable");
   },
@@ -287,3 +295,4 @@ xing.bikinibottom.Home.Outbox = Class.create({
     console.log(data.get("messages").getData("messages"));
   }
 });
+
