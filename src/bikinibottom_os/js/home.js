@@ -134,11 +134,6 @@ xing.bikinibottom.Home.New = Class.create({
     // this needs to be generated here, since we're calling the flash with these params
     this._formData = this._form.serialize(true);
     this.currentVideoKey = this._generateKey(this._owner.getId(), this._formData.recipient);
-    value = {
-      timestamp: (new Date).getTime(),
-      sender: this._owner.getId(),
-      subject: this._formData.subject
-    };
     
     if (gadgets.flash.getMajorVersion() >= 10) {
       gadgets.flash.embedFlash(
@@ -167,6 +162,11 @@ xing.bikinibottom.Home.New = Class.create({
   
   _submit: function() {
     var req, value, key, recipientSpec;
+    value = {
+      timestamp: (new Date).getTime(),
+      sender: this._owner.getId(),
+      subject: this._formData.subject
+    };
     
     this._form.getElements().invoke("disable");
     
