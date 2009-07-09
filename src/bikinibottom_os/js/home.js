@@ -187,12 +187,16 @@ xing.bikinibottom.Home.New = Class.create({
     if (data.get("message_saving").hadError()) {
       alert("error!");
     } else {
-      
+      this._resetVideoForm();
     }
   },
   
   _resetVideoForm: function() {
-  	
+  	this.videoAdded = false;
+  	// remove the flash video
+  	$('flash-recorder').childElements()[0].remove();
+  	this.submitButton.setValue("Add Video [RES]");
+  	this._form.getElements().invoke("enable");
   },
   
   _generateKey: function(ownerId, friendId) {
