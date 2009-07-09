@@ -37,7 +37,7 @@ module JsDispatchingServer
       chat = Chat.find_or_create(data['sender'], data['recipient'])
       msg = "Found chat #{chat.chat_id}(#{chat.id}) for #{chat.user_1} and #{chat.user_2}"
       log(msg)
-      send_data(data['message'])
+      send_data(msg)
       chat.send_message_from(data['sender'], data['message'])
     end
     
