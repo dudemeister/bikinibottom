@@ -23,13 +23,19 @@ form label {
   margin-bottom: 6px;
 }
 
+#flash-player {
+  margin: 0 auto;
+  width: 305px;
+}
+
 ul li {
-  color: #999;
+  color: #666;
   border-bottom: 1px solid #D8D8D8;
   height: 40px;
   margin: 0 0 2px;
   overflow: hidden;
   padding: 0 5px 2px 8px;
+  font-size: 11px;
 }
 
 ul li:last-child {
@@ -38,11 +44,10 @@ ul li:last-child {
 
 ul li a {
   color: #000;
-  font-weight: bold;
+  font-size: 12px;
   display: block;
 }
 
-#flash-player {
-  margin:0 auto;
-  width:305px;
- }
+ul li a.unread {
+  font-weight: bold;
+}

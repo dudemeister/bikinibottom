@@ -49,5 +49,49 @@ xing.bikinibottom.SocialData = {
       
       callback(this._friends);
     }.bind(this));
+  },
+  
+  // Returns all messages that belong to the owner, sorted by date
+  getSentMessages: function(callback, forceLoading) {
+    callback = callback || function() {};
+    
+    if (this._sentMessages && !forceLoading) {
+      callback(this._sentMessages);
+    }
+    
+    var req, ownerSpec, message, messages, sentMessagesJson, sentMessages, i;
+    
+    req = opensocial.newDataRequest();
+    ownerSpec = opensocial.newIdSpec({ userId: "OWNER", groupId: "SELF" });
+    
+    req.add(req.newFetchPersonAppDataRequest(ownerSpec, "*"), "messages");
+    req.send(function(data) {
+      if (data.hadError()) {
+        return alert("error retrieving messages... w000t!");
+      }
+      
+      messages = data.get("messages").getData();
+      xing.bikinibottom.SocialData.getOwner(function(owner) {
+        sentMessages = [];
+        sentMessagesJson = messages[owner.getId()];
+        for (id in sentMessagesJson) {
+          message = gadgets.util.unescapeString(sentMessagesJson[id]);
+          message = gadgets.json.parse(message);
+          
+          message = Object.extend(message, {
+            id: id,
+            date: new Date(message.timestamp).toGMTString()
+          });
+          sentMessages.push(message);
+        }
+        
+        // Sort by date
+        sentMessages = sentMessages.sortBy(function(message) {
+          return message.timestamp;
+        }).reverse();
+        
+        callback(sentMessages);
+      }.bind(this));
+    }.bind(this));
   }
 };
