@@ -83,14 +83,62 @@ xing.bikinibottom.SocialData = {
           });
           sentMessages.push(message);
         }
-        
-        // Sort by date
-        sentMessages = sentMessages.sortBy(function(message) {
-          return message.timestamp;
-        }).reverse();
-        
-        callback(sentMessages);
       }.bind(this));
+      // Sort by date
+      sentMessages = sentMessages.sortBy(function(message) {
+        return message.timestamp;
+      }).reverse();
+      
+      callback(sentMessages);
+    }.bind(this));
+  },
+  
+  // Returns all messages that belong to the owner, sorted by date
+  getReceivedMessages: function(callback, forceLoading) {
+  	callback = callback || function() {};
+    
+    if (this._receivedMessages && !forceLoading) {
+      callback(this._receivedMessages);
+    }
+    
+    var req, ownerSpec, message, messages_by_sender, receivedMessagesJson, receivedMessages, i;
+    
+    req = opensocial.newDataRequest();
+    ownerSpec = opensocial.newIdSpec({ userId: "OWNER", groupId: "FRIENDS" });
+    
+    req.add(req.newFetchPersonAppDataRequest(ownerSpec, "*"), "messages");
+    req.send(function(data) {
+      if (data.hadError()) {
+        return alert("error retrieving messages... w000t!");
+      }
+      
+      messages_by_sender = data.get("messages").getData();
+      xing.bikinibottom.SocialData.getOwner(function(owner) {
+      receivedMessages = [];
+      for (sender in messages_by_sender) {
+        messages_by_id = messages_by_sender[sender];
+        for (message_id in messages_by_id) {
+          message = messages_by_id[message_id];
+          message = gadgets.util.unescapeString(message);
+          message = gadgets.json.parse(message);
+
+          message = Object.extend(message, {
+            id: message_id,
+            date: new Date(message.timestamp).toGMTString()
+          });
+          if (message.recipient == owner.fields_.id) {
+          	receivedMessages.push(message);
+          }
+        }
+      }
+      // Sort by date
+      receivedMessages = receivedMessages.sortBy(function(message) {
+        return message.timestamp;
+      }).reverse();
+      
+      console.log(receivedMessages);
+      callback(receivedMessages);
+      }.bind(this));      
     }.bind(this));
   }
 };

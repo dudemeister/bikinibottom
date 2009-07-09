@@ -67,6 +67,8 @@ xing.bikinibottom.Home.New = Class.create({
   },
   
   _loadTab: function() {
+    gadgets.window.adjustHeight();
+    
     if (this._tabLoaded) {
       return;
     }
