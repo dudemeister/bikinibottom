@@ -64,6 +64,7 @@ xing.bikinibottom.Home.TextChat = Class.create({
   },
   
   _dataCallback: function(friends) {
+    console.log('_dataCallback');
     this._friends = friends;
     
     this._renderRecipients();
