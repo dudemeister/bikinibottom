@@ -3,12 +3,9 @@
 require 'rubygems'
 require 'eventmachine'
 require 'json'
-require 'ruby-debug'
 
 require File.join(File.dirname(__FILE__), 'chat')
 require File.join(File.dirname(__FILE__), 'user')
-
-Debugger.start
 
 # this is here to make sure environment.rb doens't recreate the EventMachine Loop
 RUN_FROM_DISPATCHER = true

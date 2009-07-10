@@ -15,7 +15,7 @@ xing.bikinibottom.TextChat = Class.create({
   
   getTabData: function() {
     return {
-      name: "Text-Chat", // [RES]
+      name: "Chat", // [RES]
       contentContainer: this.container,
       tooltip: "Chat", // [RES]
       callback: this._loadTab.bind(this)
