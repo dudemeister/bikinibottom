@@ -1,4 +1,4 @@
-xing.bikinibottom.Home.TextChat = Class.create({
+xing.bikinibottom.TextChat = Class.create({
   ids: {
     CONTAINER: "text-chat",
     FORM: "text-chat-form",

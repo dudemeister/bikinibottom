@@ -1,18 +1,18 @@
 form, ul {
   padding: 5px;
-  width: 303px;
+  width: 630px;
   margin: 0 auto;
 }
 
 form select,
 form input[type=text] {
-  width: 303px;
+  width: 630px;
   margin-bottom: 6px;
   display: block;
 }
 
 form input[type=text] {
-  width: 297px; /* 303px - 6px (border) */
+  width: 624px; /* 630px - 6px (border) */
 }
 
 form label {
@@ -67,7 +67,7 @@ ul li a.unread {
 #outbox-message-player,
 #inbox-message-player {
   margin: 0 auto;
-  width: 305px;
+  width: 640px;
 }
 
 .hint {

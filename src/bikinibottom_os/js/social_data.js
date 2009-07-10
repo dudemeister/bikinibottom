@@ -85,13 +85,13 @@ xing.bikinibottom.SocialData = {
           });
           sentMessages.push(message);
         }
+        
+        // Sort by date
+        this._sentMessages = sentMessages.sortBy(function(message) {
+          return message.timestamp || 0;
+        }).reverse();
+        callback(this._sentMessages);
       }.bind(this));
-      // Sort by date
-      this._sentMessages = sentMessages.sortBy(function(message) {
-        return message.timestamp || 0;
-      }).reverse();
-      
-      callback(this._sentMessages);
     }.bind(this));
   },
   
