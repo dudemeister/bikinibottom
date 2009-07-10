@@ -193,5 +193,23 @@ xing.bikinibottom.SocialData = {
       
       callback();
     });
+  },
+  
+  sendPrivateMessage: function(recipient, subject, body, callback) {
+    var params, message;
+    
+    callback = callback || function() {};
+    
+    params = {};
+    params[opensocial.Message.Field.TYPE] = opensocial.Message.Type.PRIVATE_MESSAGE;
+    params[opensocial.Message.Field.TITLE] = subject;
+    
+    // Convert to array
+    recipient = [recipient];
+    
+    message = opensocial.newMessage(body, params);
+    
+    // Ok, send!
+    opensocial.requestSendMessage(recipient, message, callback);
   }
 };

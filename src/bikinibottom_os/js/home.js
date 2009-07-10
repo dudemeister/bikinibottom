@@ -61,6 +61,8 @@ xing.bikinibottom.Home.New = Class.create({
   KEY_TEMPLATE: "message_#{friendId}_#{ownerId}_#{date}",
   RECIPIENT_TEMPLATE: '<option value="#{id}">#{displayName}</option>',
   FLASH_URL: "http://localhost:8080/bikinibottom_os/liverecord.swf?action=record",
+  PM_SUBJECT: "You received a new video message \"#{subject}\" from #{senderName}!",
+  PM_BODY: "Click here to watch it: #{url}",
   
   initialize: function() {
     this.parent = parent;
@@ -209,11 +211,13 @@ xing.bikinibottom.Home.New = Class.create({
   
   _submit: function() {
     var req, value, recipientSpec;
+    
+    this._formData.subject = this._formData.subject || "Untitled [RES]";
     value = {
       timestamp: (new Date).getTime(),
       sender: this._owner.getId(),
       senderName: this._owner.getDisplayName().escapeHTML(),
-      subject: (this._formData.subject || "Untitled [RES]").escapeHTML(),
+      subject: this._formData.subject.escapeHTML(),
       recipient: this._formData.recipient,
       recipientName: this._recipientName
     };
@@ -232,6 +236,9 @@ xing.bikinibottom.Home.New = Class.create({
     } else {
       var msg, msgElem;
       
+      this._sendPrivateMessage();
+      
+      // Show info
       msg = new gadgets.MiniMessage(xing.bikinibottom.moduleId);
       msgElem = msg.createTimerMessage(
         "You have succesfully sent a video message to: " + this._recipientName + " [RES]", 10
@@ -240,6 +247,18 @@ xing.bikinibottom.Home.New = Class.create({
       
       this._resetVideoForm();
     }
+  },
+  
+  _sendPrivateMessage: function() {
+    var body, subject;
+    
+    body = this.PM_BODY;
+    subject = this.PM_SUBJECT.interpolate({
+      senderName: this._owner.getDisplayName(),
+      subject: this._formData.subject
+    });
+    
+    xing.bikinibottom.SocialData.sendPrivateMessage(this._formData.recipient, subject, body);
   },
   
   _resetVideoForm: function() {
