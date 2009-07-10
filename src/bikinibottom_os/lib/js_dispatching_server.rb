@@ -3,7 +3,6 @@
 require 'rubygems'
 require 'eventmachine'
 require 'json'
-require 'ruby-debug'
 
 require File.join(File.dirname(__FILE__), 'chat')
 require File.join(File.dirname(__FILE__), 'user')
