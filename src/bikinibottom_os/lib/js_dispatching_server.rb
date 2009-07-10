@@ -66,7 +66,8 @@ module JsDispatchingServer
     user.queue.bind(@topic, :key => "chat_for_users_#{chat.chat_id}").subscribe do |msg|
       puts "topic got message: #{msg} (handler for socket #{@key})"
       msg = JSON(msg)
-      user.socket.send_data(msg.to_json + "\0") unless (user.socket.key == @key)
+      sending_user = User.find(msg['sender'])
+      user.socket.send_data(msg.to_json + "\0") unless (user.socket.key == sending_user.socket.key)
     end
           
     #end
