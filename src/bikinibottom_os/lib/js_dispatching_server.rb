@@ -41,7 +41,7 @@ module JsDispatchingServer
         bind_user_queue_to_topic(data['sender'], chat) if !@subscribed
         
         log(msg)
-        chat.new_message_from(data['sender'], data['message'])
+        chat.new_message(data)
 
       else  
         raise "unknown command #{data[:cmd]}"

@@ -19,9 +19,8 @@ class Chat
   end
 
   # gesendete nachrichten an topic senden (publish)  
-  def new_message_from(sender, message)
-    puts "message from #{sender}: '#{message}'"
-    @topic.publish({:sender => sender, :message => message}.to_json, :key => "chat_for_users_#{chat_id}")
+  def new_message(data)
+    @topic.publish(data.to_json, :key => "chat_for_users_#{chat_id}")
   end
 
   class << self
