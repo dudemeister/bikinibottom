@@ -7,8 +7,6 @@ require 'json'
 require File.join(File.dirname(__FILE__), 'chat')
 require File.join(File.dirname(__FILE__), 'user')
 
-Debugger.start
-
 # this is here to make sure environment.rb doens't recreate the EventMachine Loop
 RUN_FROM_DISPATCHER = true
 require File.dirname(__FILE__) + '/flash_server.rb'

@@ -1,7 +1,7 @@
 function DispatchingSystem(server, user_auth_token, user_id) {
-  if (!server.match(/^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$/)) { 
-    throw 'Server IP for DispatchingSystem must be IPv4, without protocol.'
-  }
+  //if (!server.match(/^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$/)) { 
+  //  throw 'Server IP for DispatchingSystem must be IPv4, without protocol.'
+  //}
   // this.socket = socket;
   this.server = server;
   this.user_auth_token = user_auth_token;
