@@ -84,7 +84,7 @@ xing.bikinibottom.New = Class.create({
     potentialRecipients = [{
       getDisplayName: function() { return "TEST RECIPIENT (for outbox)"; },
       getId: function() { return "test.test"; }
-    }].concat(this._friends.array_);
+    }].concat(this._friends);
     
     // "each" is here not the prototype method
     potentialRecipients.each(function(friend) {
