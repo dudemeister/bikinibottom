@@ -116,12 +116,18 @@ xing.bikinibottom.Home.New = Class.create({
   },
   
   _renderRecipients: function() {
-    var optionHtml, html;
+    var optionHtml, html, potentialRecipients;
     
     html = [];
     
+    // Add a test recipient
+    potentialRecipients = [{
+      getDisplayName: function() { return "TEST RECIPIENT (for outbox)"; },
+      getId: function() { return "test.test"; }
+    }].concat(this._friends.array_);
+    
     // "each" is here not the prototype method
-    this._friends.each(function(friend) {
+    potentialRecipients.each(function(friend) {
       optionHtml = this.RECIPIENT_TEMPLATE.interpolate({
         displayName: friend.getDisplayName().escapeHTML(),
         id: friend.getId()

@@ -1,20 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Module>
-  <ModulePrefs title="Bikini-Bottom" author_email="christopher.blum@xing.com, ali.jelveh@xing.com" description="awesome">
-    <Require feature="opensocial-0.8" />
-    <Require feature="dynamic-height" />
-    <Require feature="flash" />
-    <Require feature="tabs" />
-    <Require feature="minimessage" />
-    <Require feature="views" />
-  </ModulePrefs>
-  <!--
-    Please note:
-    Wordings are marked with "[RES]" to outsource them later into
-    message bundles
-  -->
-  <Content type="html" view="home"><![CDATA[
-    <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    <ModulePrefs
+            title="XING Video Messaging + Text Chat"
+            author="Christopher Blum, Ali Jelveh, Phillip Oertel"
+            author_email="christopher.blum@xing.com, ali.jelveh@xing.com, phillip.oertel@xing.com"
+            description="awesome.">
+        <Require feature="opensocial-0.8" />
+        <Require feature="views" />
+        <Require feature="flash" />
+        <Require feature="dynamic-height" />
+        <Require feature="minimessage" />
+        <Require feature="tabs" />
+    </ModulePrefs>
+    <Content type="html" view="home"><![CDATA[<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
          "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
     <html xmlns="http://www.w3.org/1999/xhtml">
       <head>
@@ -102,6 +100,5 @@
           var Dispatcher = new DispatchingSystem('127.0.0.1', '', '');
         </script>
       </body>
-    </html>
-  ]]></Content>
+    </html>]]></Content>
 </Module>

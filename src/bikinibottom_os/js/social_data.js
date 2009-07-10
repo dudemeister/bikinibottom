@@ -88,7 +88,7 @@ xing.bikinibottom.SocialData = {
       }.bind(this));
       // Sort by date
       this._sentMessages = sentMessages.sortBy(function(message) {
-        return message.timestamp;
+        return message.timestamp || 0;
       }).reverse();
       
       callback(this._sentMessages);
