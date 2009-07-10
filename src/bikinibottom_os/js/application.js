@@ -39,7 +39,7 @@ xing.bikinibottom.New = Class.create({
   
   _loadTab: function() {
     if (this._tabLoaded) {
-      gadgets.window.adjustHeight();
+      (function() { gadgets.window.adjustHeight(); }).delay(0.1);
       return;
     }
     
@@ -47,6 +47,7 @@ xing.bikinibottom.New = Class.create({
     this._loadData();
     this._observe();
     
+    gadgets.window.adjustHeight();
     this._tabLoaded = true;
   },
   
@@ -102,9 +103,9 @@ xing.bikinibottom.New = Class.create({
   },
   
   _observe: function() {
-    this._contactChooser.observe("change", function(event) {
-      this._form.subject.focus();
-    }.bind(this));
+    // this._contactChooser.observe("change", function(event) {
+    //       this._form.subject.focus();
+    //     }.bind(this));
     
     this._form.observe("submit", function(event) {
       event.stop();
