@@ -58,6 +58,7 @@ xing.bikinibottom.SocialData = {
         this._friends = this._friends.concat(data.asArray());
         
         if (this._friends.length >= friendsCount || this._friends.length >= 200) {
+          $(document.body).setStyle({ cursor: "" });
           callback(this._friends);
         } else {
           index += 50;
@@ -67,6 +68,8 @@ xing.bikinibottom.SocialData = {
     }.bind(this);
     
     getFriends();
+    
+    $(document.body).setStyle({ cursor: "wait" });
   },
   
   // Returns all messages that belong to the owner, sorted by date
