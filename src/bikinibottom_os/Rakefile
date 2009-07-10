@@ -2,5 +2,5 @@ desc "deploy the application via rsync"
 task :deploy do
   deploy_url = 'root@bikinibottom.phillipoertel.com:/sites/bikinibottom/docroot'
   sh "rsync -r  --exclude=.git --exclude-from=../../.gitignore . #{deploy_url}"
-  sh %(ssh root@bikinibottom.phillipoertel.com "cd /sites/bikinibottom/docroot && perl -pi -w -e 's/localhost:8080/bikinibottom\.phillipoertel\.com/g;' * && perl -pi -w -e 's/localhost:8080/bikinibottom\.phillipoertel\.com/g;' js/* && cd /sites/bikinibottom/docroot && perl -pi -w -e 's/127\.0\.0\.1/bikinibottom\.phillipoertel\.com/g;' *.xml")
+  sh %(ssh root@bikinibottom.phillipoertel.com "cd /sites/bikinibottom/docroot && perl -pi -w -e 's/localhost:8080\\/bikinibottom_os/bikinibottom\.phillipoertel\.com/g;' * && perl -pi -w -e 's/localhost:8080\\/bikinibottom_os/bikinibottom\.phillipoertel\.com/g;' js/* && cd /sites/bikinibottom/docroot && perl -pi -w -e 's/127\.0\.0\.1/bikinibottom\.phillipoertel\.com/g;' *.xml")
 end
