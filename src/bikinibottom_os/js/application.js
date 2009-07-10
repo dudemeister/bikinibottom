@@ -411,6 +411,9 @@ xing.bikinibottom.Inbox = Class.create(xing.bikinibottom.MessageList, {
   },
   
   _getMessageEntry: function(messageObj) {
+    if (!messageObj) {
+      return;
+    }
     return this.INBOX_MESSAGE_TEMPLATE.interpolate(messageObj);
   },
   
@@ -482,6 +485,9 @@ xing.bikinibottom.Outbox = Class.create(xing.bikinibottom.MessageList, {
   },
   
   _getMessageEntry: function(messageObj) {
+    if (!messageObj) {
+      return;
+    }
     return this.OUTBOX_MESSAGE_TEMPLATE.interpolate(messageObj);
   }
 });
