@@ -1,0 +1,5 @@
+desc "deploy the application via rsync"
+task :deploy do
+  deploy_url = 'root@bikinibottom.phillipoertel.com:/sites/bikinibottom/docroot'
+  sh "rsync -r  --exclude=.git --exclude-from=../../.gitignore . #{deploy_url}"
+end
