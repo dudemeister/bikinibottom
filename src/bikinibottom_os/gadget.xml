@@ -58,9 +58,9 @@
               <option>-- Please select [RES] --</option>
             </select>
             <label for="text-chat-message">Message [RES]</label>
-            <input type="text" id="text-chat-message" name="text-chat-message" value="TEXT CHAT MESSAGE" />
+            <input type="text" id="text-chat-message" name="text-chat-message" value="" autocomplete="off" />
             <input type="submit" name="text-chat-send" value="Send [RES]" />
-            <div id="text-chat-conversation" style="height:200px;overflow:auto;border:1px solid #999;">
+            <div id="text-chat-conversation" style="height:100px;overflow:auto;border:1px solid #999;">
             </div>
           </form>
         </div>

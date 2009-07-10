@@ -3,10 +3,14 @@ require 'mq'
 class Chat
   
   attr_reader :user_1, :user_2
+  attr_accessor :initialized
   
   def initialize(user_1, user_2)
     @user_1 = user_1
     @user_2 = user_2
+    
+    @initialized = false
+    
     @@chats ||= {}
     @@chats[chat_id] = self
     

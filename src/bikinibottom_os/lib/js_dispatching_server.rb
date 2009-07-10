@@ -16,6 +16,8 @@ require File.dirname(__FILE__) + '/flash_server.rb'
 
 # awesome stuff happening here
 module JsDispatchingServer
+
+  attr_accessor :key
   
   def post_init
     @key ||= rand(100000)
@@ -30,18 +32,26 @@ module JsDispatchingServer
 
     case data['cmd']
       
-      # create queue for the user, and remember he's online
       when 'ping'
-        User.add_online(data['sender'], @key)
-        log("#{data['sender']} sent 'ping'")
+        # remember user is online and his socket
+        User.add_online(data['sender'], self)
+        log("#{data['sender']} came online")
         
       when 'message'
         chat = Chat.find_or_create(data['sender'], data['recipient'])
         msg = "Found chat #{chat.chat_id}(#{chat.object_id}) for #{chat.user_1} and #{chat.user_2}"
-        bind_user_queue_to_topic(data['sender'], chat) if !@subscribed
+
+        unless chat.initialized
+          log("initializing chat #{chat.chat_id} ... ")
+          bind_user_queue_to_topic(data['sender'], chat)
+          bind_user_queue_to_topic(data['recipient'], chat)
+          chat.initialized = true
+        else
+          log("chat #{chat.chat_id} already initialized ")
+        end
         
-        log(msg)
         chat.new_message(data)
+        log("sent message #{data}")
 
       else  
         raise "unknown command #{data[:cmd]}"
@@ -50,16 +60,15 @@ module JsDispatchingServer
   end
   
   def bind_user_queue_to_topic(user_id, chat)
-      user = User.find(user_id) 
-      p user.queue
-      user.queue.bind(@topic, :key => "chat_for_users_#{chat.chat_id}").subscribe do |msg|
-        puts "got message: #{msg}"
-        msg = JSON(msg)
-        send_data(msg.to_json + "\0") unless User.find(msg['sender']).socket_id == @key
-      end
-      
-      @subscribed = true
-      
+    user = User.find(user_id)
+    
+    log("binding #{user_id} to chat #{chat.chat_id} (socket id #{user.socket.key})")
+    user.queue.bind(@topic, :key => "chat_for_users_#{chat.chat_id}").subscribe do |msg|
+      puts "topic got message: #{msg} (handler for socket #{@key})"
+      msg = JSON(msg)
+      user.socket.send_data(msg.to_json + "\0") unless (user.socket.key == @key)
+    end
+          
     #end
     #  message = JSON(msg)
     #  sender_socket_id = message['socket_id']
@@ -80,15 +89,15 @@ module JsDispatchingServer
   
   include FlashServer
   
-    # add \000 delimiter if not present. wraps send_data from EventMachine.
-    def send_data(message)
-      message = "#{message}\000" unless message =~ /\000$/
-      super(message)
-    end
+  # add \000 delimiter if not present. wraps send_data from EventMachine.
+  def send_data(message)
+    message = "#{message}\000" unless message =~ /\000$/
+    super(message)
+  end
   
-    def log(text)
-      puts "connection #{@key && @key.inspect || 'uninitialized'}: #{text}"
-    end
+  def log(text)
+    puts "connection #{@key && @key.inspect || 'uninitialized'}: #{text}"
+  end
 
 end
 

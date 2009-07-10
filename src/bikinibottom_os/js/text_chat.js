@@ -27,6 +27,8 @@ xing.bikinibottom.Home.TextChat = Class.create({
       return;
     }
     
+    window.setTimeout(function() { gadgets.window.adjustHeight(); }, 100);
+    
     this._initElements();
     this._loadData();
     this._observe();
@@ -72,7 +74,7 @@ xing.bikinibottom.Home.TextChat = Class.create({
     this._form.getElements().invoke("enable");
     
     // needs OSO owner, so only done here. also need to wait until flash socket is ready
-    window.setTimeout((function() { this._sendPing(); }).bind(this), 2000);
+    window.setTimeout((function() { this._sendPing(); }).bind(this), 1000);
   },
   
   _renderRecipients: function() {
@@ -113,7 +115,6 @@ xing.bikinibottom.Home.TextChat = Class.create({
   },
   
   _sendPing: function() {
-    console.log('_sendPing');
     data = {
       'cmd': 'ping',
       'sender': this._owner.getId(),
