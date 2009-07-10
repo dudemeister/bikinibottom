@@ -33,23 +33,40 @@ xing.bikinibottom.SocialData = {
     if (this._friends && !forceLoading) {
       return callback(this._friends);
     }
-    var req, friendsSpec;
-    req = opensocial.newDataRequest();
+    var req, friendsSpec, index, friendsCount, data;
     
-    friendsSpec = opensocial.newIdSpec({ userId: "OWNER", groupId: "FRIENDS" });
-    friendsParams = {};
-    friendsParams[opensocial.DataRequest.PeopleRequestFields.MAX] = 100;
+    index = 0;
+    this._friends = [];
     
-    req.add(req.newFetchPeopleRequest(friendsSpec, friendsParams), "friends");
-    req.send(function(data) {
-      if (data.hadError()) {
-        return alert("error loading friends... w000t!");
-      }
-      
-      this._friends = data.get("friends").getData();
-      callback(this._friends);
-      
-    }.bind(this));
+    var getFriends = function() {
+      req = opensocial.newDataRequest();
+
+      friendsSpec = opensocial.newIdSpec({ userId: "OWNER", groupId: "FRIENDS" });
+      friendsParams = {};
+      friendsParams[opensocial.DataRequest.PeopleRequestFields.FIRST] = index;
+      friendsParams[opensocial.DataRequest.PeopleRequestFields.MAX] = 50;
+
+      req.add(req.newFetchPeopleRequest(friendsSpec, friendsParams), "friends");
+      req.send(function(data) {
+        if (data.hadError()) {
+          return alert("error loading friends... w000t!");
+        }
+        
+        data = data.get("friends").getData();
+        friendsCount = friendsCount || data.getTotalSize();
+        
+        this._friends = this._friends.concat(data.asArray());
+        
+        if (this._friends.length >= friendsCount || this._friends.length >= 200) {
+          callback(this._friends);
+        } else {
+          index += 50;
+          getFriends();
+        }
+      }.bind(this));
+    }.bind(this);
+    
+    getFriends();
   },
   
   // Returns all messages that belong to the owner, sorted by date
