@@ -3,7 +3,7 @@
     <ModulePrefs
             title="XING Video Messaging + Text Chat"
             author="Christopher Blum, Ali Jelveh, Phillip Oertel"
-            author_email="christopher.blum@xing.com, ali.jelveh@xing.com, phillip.oertel@xing.com"
+            author_email="christopher.blum@xing.com"
             description="awesome.">
         <Require feature="opensocial-0.8" />
         <Require feature="views" />
