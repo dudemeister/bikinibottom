@@ -101,19 +101,23 @@ xing.bikinibottom.Home.TextChat = Class.create({
       data = {
         cmd: 'message',
         sender: this._owner.getId(),
+        sender_name: this._owner.getDisplayName(),
         recipient: this._contactChooser.value, 
         message: this._messageInput.value
       };
       console.log('Sending data: ' + $H(data).toJSON());
       Dispatcher.sendMessage($H(data).toJSON() + "\000");
+      Dispatcher.addToConversation(data['sender_name'], data['message'], '#000');
+      
     }.bind(this));
   },
   
   _sendPing: function() {
     console.log('_sendPing');
     data = {
-      cmd: 'ping',
-      sender: this._owner.getId()
+      'cmd': 'ping',
+      'sender': this._owner.getId(),
+      'sender_name': this._owner.getDisplayName()
     };
     console.log('Sending data: ' + $H(data).toJSON());
     Dispatcher.sendMessage($H(data).toJSON() + "\000");

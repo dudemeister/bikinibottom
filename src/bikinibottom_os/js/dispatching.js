@@ -67,9 +67,8 @@ DispatchingSystem.prototype = {
     
     // make it a first class object
     eval("var data = " + raw_data);
-      var p = new Element('p', { 'id': pId, 'class': 'message'}).update(data['message']);
-      $('text-chat-conversation').insert(p, {'position': 'top'});
-      gadgets.window.adjustHeight();
+    this.addToConversation(data['sender_name'], data['message'], "#999");
+    gadgets.window.adjustHeight();
     
     //switch(message.x_target) {
     //  // special case: on initial successful connection this sets the socket_id
@@ -103,6 +102,11 @@ DispatchingSystem.prototype = {
   
   "test": function(args) {
     console.log('dispatcher called test');
+  },
+  
+  "addToConversation": function(sender, message, color) {
+    var messsage_html = '<p class="message">' + '<span style="font-weight:bold;color:' + color + ';"><i>' + sender + '</i></span> '+ ' '+ message + '</p>';
+    $('text-chat-conversation').innerHTML = messsage_html + $('text-chat-conversation').innerHTML;
   }
   
 };
