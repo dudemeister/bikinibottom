@@ -21,7 +21,7 @@
         <script src="https://ajax.googleapis.com/ajax/libs/prototype/1.6.0.3/prototype.js" type="text/javascript" charset="utf-8"></script>
         <script type="text/javascript" charset="utf-8">
           // Mock OSDE
-          if (gadgets.util.getUrlParameters().container = "default") {
+          if (gadgets.util.getUrlParameters().container == "default") {
             document.write('<script src="http://localhost:8080/bikinibottom_os/js/persistent_fix.js" type="text/javascript" charset="utf-8"' + '><' + '/script>');
           }
         </script>

@@ -58,7 +58,7 @@ xing.bikinibottom.Home.New = Class.create({
     ERROR_MESSAGE: "error-message"
   },
   
-  KEY_TEMPLATE: "message_#{friendId}_#{ownerId}_#{date}",
+  KEY_TEMPLATE: "message_#{friendId}_#{randomKey}_#{date}",
   RECIPIENT_TEMPLATE: '<option value="#{id}">#{displayName}</option>',
   FLASH_URL: "http://localhost:8080/bikinibottom_os/liverecord.swf?action=record",
   PM_SUBJECT: "You received a new video message \"#{subject}\" from #{senderName}!",
@@ -280,7 +280,7 @@ xing.bikinibottom.Home.New = Class.create({
   
   _generateKey: function(ownerId, friendId) {
     return this.KEY_TEMPLATE.interpolate({
-      ownerId: ownerId,
+      randomKey: (Math.random() * 10000000),
       friendId: friendId,
       date: (new Date).getTime()
     });
