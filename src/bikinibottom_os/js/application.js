@@ -46,8 +46,8 @@ xing.bikinibottom.New = Class.create({
     this._initElements();
     this._loadData();
     this._observe();
-    
-    gadgets.window.adjustHeight();
+
+    (function() { gadgets.window.adjustHeight(); }).delay(0.1);
     this._tabLoaded = true;
   },
   
