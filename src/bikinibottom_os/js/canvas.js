@@ -14,9 +14,9 @@ xing.bikinibottom.Canvas = {
   settings: {
     MAX_ENTRIES: 25,
     FLASH_VERSION: 8,
-    FLASH_URL: "http://localhost:8080/bikinibottom_os/liverecord_canvas.swf",
-    STREAM_RECORD_URL: "rmtp://bikinibottom.phillipoertel.com/bikinibottom",
-    STREAM_PLAY_URL: "rmtp://bikinibottom.phillipoertel.com/simplevideostreaming",
+    FLASH_URL: "http://localhost:8080/bikinibottom_os/video_canvas.swf",
+    STREAM_RECORD_URL: "rtmp://bikinibottom.phillipoertel.com/bikinibottom",
+    STREAM_PLAY_URL: "rtmp://bikinibottom.phillipoertel.com/simplevideostreaming",
     FLASH_WIDTH: 640,
     FLASH_HEIGHT: 360
   },

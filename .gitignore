@@ -1,3 +1,4 @@
 *.log
 src/bikinibottom_os/target/*
 src/.metadata
+.DS_Store
