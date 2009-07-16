@@ -1,0 +1,1 @@
+﻿xing.bikinibottom.player.setVideoOptions({	url: "rtmp://localhost/simplevideostreaming",	id: videoId});xing.bikinibottom.player.setUiElements({	player: _root.player,	but_pause: _root.but_pause,	but_play: _root.but_play,	but_rewind: _root.but_rewind,	txt_timer: _root.txt_timer2,	txt_status: _root.txt_status});xing.bikinibottom.player.initialize();

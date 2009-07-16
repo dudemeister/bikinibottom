@@ -100,13 +100,10 @@ xing.bikinibottom.New = Class.create({
     this._contactChooser.enable();
     // Select first entry
     this._contactChooser.down().selected = true;
+    this._contactChooser.down().update("-- Please select [RES] --");
   },
   
   _observe: function() {
-    // this._contactChooser.observe("change", function(event) {
-    //       this._form.subject.focus();
-    //     }.bind(this));
-    
     this._form.observe("submit", function(event) {
       event.stop();
       if(this.videoAdded) {
@@ -120,7 +117,7 @@ xing.bikinibottom.New = Class.create({
   },
   
   _addVideo: function() {
-    var msg;
+    var msg, url;
     
     // this needs to be generated here, since we're calling the flash with these params
     this._formData = this._form.serialize(true);
@@ -139,11 +136,15 @@ xing.bikinibottom.New = Class.create({
     this._recipientName = this._contactChooser.down("[value='" + this._formData.recipient + "']").innerHTML;
     this.currentVideoKey = this._generateKey();
     
-    if (gadgets.flash.getMajorVersion() >= 10) {
+    if (gadgets.flash.getMajorVersion() >= this.settings.FLASH_VERSION) {
+      url = this.settings.FLASH_URL
+        + "?action=record"
+        + "&videoId=" + this.currentVideoKey
+        + "&recordUrl=" + encodeURIComponent(this.settings.STREAM_RECORD_URL);
       gadgets.flash.embedFlash(
-        this.settings.FLASH_RECORD_URL + "&videoId=" + this.currentVideoKey,
+        url,
         this.ids.FLASH_CONTAINER,
-        10, {
+        this.settings.FLASH_VERSION, {
           width: this.settings.FLASH_WIDTH,
           height: this.settings.FLASH_HEIGHT,
           swliveconnect: true,
@@ -191,7 +192,7 @@ xing.bikinibottom.New = Class.create({
   
   _submitCallback: function(data) {
     if (data.get("message_saving").hadError()) {
-      alert("error saving message... w000t!");
+      console.log("error saving message... w000t!");
     } else {
       var msg, msgElem;
       
@@ -237,6 +238,7 @@ xing.bikinibottom.New = Class.create({
     
     // reset contactChooser
     this._contactChooser.down().selected = true;
+    
     this._form.subject.clear();
     this._submitButton.setValue("Add Video [RES]");
     this._enableForm();
@@ -333,12 +335,18 @@ xing.bikinibottom.MessageList = Class.create({
   },
   
   _showMovieFor: function(movieId) {
-    var i;
-    if (gadgets.flash.getMajorVersion() >= 10) {
+    var i, url;
+    
+    if (gadgets.flash.getMajorVersion() >= this.settings.FLASH_VERSION) {
+      url = this.settings.FLASH_URL
+        + "?action=play"
+        + "&videoId=" + movieId
+        + "&playUrl=" + encodeURIComponent(this.settings.STREAM_PLAY_URL);
+      
       gadgets.flash.embedFlash(
-        this.settings.FLASH_PLAY_URL + "&videoId=" + movieId,
+        url,
         this.ids.FLASH_CONTAINER,
-        10, {
+        this.settings.FLASH_VERSION, {
           width: this.settings.FLASH_WIDTH,
           height: this.settings.FLASH_HEIGHT,
           swliveconnect: true,

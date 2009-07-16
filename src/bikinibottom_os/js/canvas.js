@@ -13,16 +13,18 @@ xing.bikinibottom = xing.bikinibottom || {};
 xing.bikinibottom.Canvas = {
   settings: {
     MAX_ENTRIES: 25,
-    FLASH_RECORD_URL: "http://localhost:8080/bikinibottom_os/liverecord_canvas.swf?action=record",
-    FLASH_PLAY_URL: "http://localhost:8080/bikinibottom_os/liverecord_canvas.swf?action=play",
+    FLASH_VERSION: 8,
+    FLASH_URL: "http://localhost:8080/bikinibottom_os/liverecord_canvas.swf",
+    STREAM_RECORD_URL: "rmtp://bikinibottom.phillipoertel.com/bikinibottom",
+    STREAM_PLAY_URL: "rmtp://bikinibottom.phillipoertel.com/simplevideostreaming",
     FLASH_WIDTH: 640,
-    FLASH_HEIGHT: 320
+    FLASH_HEIGHT: 360
   },
   
   initialize: function(settings) {
     this._tabObj = settings.tabs;
     this._view = "canvas";
-    this._tabs = $w("Inbox Outbox New TextChat");
+    this._tabs = $w("Inbox Outbox New");
     
     this._initSubModules();
     this._renderTabs();

@@ -12,7 +12,8 @@
         <Require feature="minimessage" />
         <Require feature="tabs" />
     </ModulePrefs>
-    <Content type="html" view="home"><![CDATA[<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    <Content type="html" view="home"><![CDATA[
+    <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
          "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
     <html xmlns="http://www.w3.org/1999/xhtml">
       <head>
@@ -32,9 +33,7 @@
             document.write('<script src="http://localhost:8080/bikinibottom_os/js/social_data.js" type="text/javascript" charset="utf-8"' + '><' + '/script>');
             document.write('<script src="http://localhost:8080/bikinibottom_os/js/application.js" type="text/javascript" charset="utf-8"' + '><' + '/script>');
             document.write('<script src="http://localhost:8080/bikinibottom_os/js/home.js" type="text/javascript" charset="utf-8"' + '><' + '/script>');
-            document.write('<script src="http://localhost:8080/bikinibottom_os/js/text_chat.js" type="text/javascript" charset="utf-8"' + '><' + '/script>');
-            document.write('<script src="http://localhost:8080/bikinibottom_os/js/dispatching.js" type="text/javascript" charset="utf-8"' + '><' + '/script>');
-        </script>          
+        </script>
       </head>
       <body>
         <script type="text/javascript" charset="utf-8">
@@ -46,28 +45,14 @@
         <div id="new" style="display: none;">
           <form id="message-form">
             <label for="recipient">Recipient [RES]</label>
-            <select id="recipient" name="recipient">
-              <option value="">-- Please select [RES] --</option>
+            <select id="recipient" name="recipient" disabled="disabled">
+              <option value="">Loading...</option>
             </select>
             <label for="subject">Subject [RES]</label>
             <input type="text" id="subject" name="subject" value="" maxlength="50" />
             <label id="flash-recorder-label" for="flash-recorder" style="display: none;">Video message [RES]</label>
-            <div id="flash-recorder" style="display: none;">You need at least flash player version 10 to record a video. Get it <a href="http://get.adobe.com/de/flashplayer/" target="_blank">here</a>. [RES]</div>
+            <div id="flash-recorder" style="display: none;">You need at least flash player version 8 to record a video. Get it <a href="http://get.adobe.com/de/flashplayer/" target="_blank">here</a>. [RES]</div>
             <input id="submit-new" type="submit" name="submit-new" value="Add Video [RES]" /> <input id="reset-new" type="reset" name="reset-new" value="Reset [RES]" /> 
-          </form>
-        </div>
-        
-        <div id="text-chat" style="display: none;">
-          <form id="text-chat-form">
-            <label for="text-chat-partner">Chat Partner [RES]</label>
-            <select id="text-chat-partner" name="text-chat-partner">
-              <option>-- Please select [RES] --</option>
-            </select>
-            <label for="text-chat-message">Message [RES]</label>
-            <input type="text" id="text-chat-message" name="text-chat-message" value="" autocomplete="off" />
-            <input type="submit" name="text-chat-send" value="Send [RES]" />
-            <div id="text-chat-conversation" style="height:100px;overflow:auto;border:1px solid #999;">
-            </div>
           </form>
         </div>
         
@@ -75,7 +60,7 @@
           <div id="inbox-list"></div>
           <div id="inbox-message-player" style="display: none;">
             <h3 id="inbox-flash-player-label">#{subject} <br /><span>(#{senderName}, #{date})</span></h3>
-            <div id="inbox-flash-player">You need at least flash player version 10 to record a video. Get it <a href="http://get.adobe.com/de/flashplayer/" target="_blank">here</a>. [RES]</div>
+            <div id="inbox-flash-player">You need at least flash player version 8 to record a video. Get it <a href="http://get.adobe.com/de/flashplayer/" target="_blank">here</a>. [RES]</div>
             <div>
               &laquo; <a id="inbox-flash-payer-back" class="back-link" href="#">back [RES]</a>
             </div>
@@ -86,7 +71,7 @@
           <div id="outbox-list"></div>
           <div id="outbox-message-player" style="display: none;">
             <h3 id="outbox-flash-player-label">#{subject} <br /><span>(#{recipientName}, #{date})</span></h3>
-            <div id="outbox-flash-player">You need at least flash player version 10 to record a video. Get it <a href="http://get.adobe.com/de/flashplayer/" target="_blank">here</a>. [RES]</div>
+            <div id="outbox-flash-player">You need at least flash player version 8 to record a video. Get it <a href="http://get.adobe.com/de/flashplayer/" target="_blank">here</a>. [RES]</div>
             <div>
               &laquo; <a id="outbox-flash-payer-back" class="back-link" href="#">back [RES]</a>
             </div>
@@ -100,14 +85,12 @@
             });
           });
         </script>
-        
-        <script type="text/javascript">
-          var Dispatcher = new DispatchingSystem('127.0.0.1', '', '');
-        </script>
       </body>
-    </html>]]></Content>
+    </html>
+    ]]></Content>
     
-    <Content type="html" view="canvas"><![CDATA[<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+    <Content type="html" view="canvas"><![CDATA[
+    <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
          "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
     <html xmlns="http://www.w3.org/1999/xhtml">
       <head>
@@ -128,8 +111,6 @@
             document.write('<script src="http://localhost:8080/bikinibottom_os/js/social_data.js" type="text/javascript" charset="utf-8"' + '><' + '/script>');
             document.write('<script src="http://localhost:8080/bikinibottom_os/js/application.js" type="text/javascript" charset="utf-8"' + '><' + '/script>');
             document.write('<script src="http://localhost:8080/bikinibottom_os/js/canvas.js" type="text/javascript" charset="utf-8"' + '><' + '/script>');
-            document.write('<script src="http://localhost:8080/bikinibottom_os/js/text_chat.js" type="text/javascript" charset="utf-8"' + '><' + '/script>');
-            document.write('<script src="http://localhost:8080/bikinibottom_os/js/dispatching.js" type="text/javascript" charset="utf-8"' + '><' + '/script>');
         </script>          
       </head>
       <body>
@@ -142,28 +123,14 @@
         <div id="new" style="display: none;">
           <form id="message-form">
             <label for="recipient">Recipient [RES]</label>
-            <select id="recipient" name="recipient">
-              <option value="">-- Please select [RES] --</option>
+            <select id="recipient" name="recipient" disabled="disabled">
+              <option value="">Loading...</option>
             </select>
             <label for="subject">Subject [RES]</label>
             <input type="text" id="subject" name="subject" value="" maxlength="50" />
             <label id="flash-recorder-label" for="flash-recorder" style="display: none;">Video message [RES]</label>
-            <div id="flash-recorder" style="display: none;">You need at least flash player version 10 to record a video. Get it <a href="http://get.adobe.com/de/flashplayer/" target="_blank">here</a>. [RES]</div>
+            <div id="flash-recorder" style="display: none;">You need at least flash player version 8 to record a video. Get it <a href="http://get.adobe.com/de/flashplayer/" target="_blank">here</a>. [RES]</div>
             <input id="submit-new" type="submit" name="submit-new" value="Add Video [RES]" /> <input id="reset-new" type="reset" name="reset-new" value="Reset [RES]" /> 
-          </form>
-        </div>
-        
-        <div id="text-chat" style="display: none;">
-          <form id="text-chat-form">
-            <label for="text-chat-partner">Chat Partner [RES]</label>
-            <select id="text-chat-partner" name="text-chat-partner">
-              <option>-- Please select [RES] --</option>
-            </select>
-            <label for="text-chat-message">Message [RES]</label>
-            <input type="text" id="text-chat-message" name="text-chat-message" value="TEXT CHAT MESSAGE" />
-            <input type="submit" name="text-chat-send" value="Send [RES]" />
-            <div id="text-chat-conversation" style="height:200px;overflow:auto;style:border:1px solid #999;">
-            </div>
           </form>
         </div>
         
@@ -196,10 +163,7 @@
             });
           });
         </script>
-        
-        <script type="text/javascript">
-          var Dispatcher = new DispatchingSystem('127.0.0.1', '', '');
-        </script>
       </body>
-    </html>]]></Content>
+    </html>
+    ]]></Content>
 </Module>

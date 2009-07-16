@@ -18,7 +18,7 @@ xing.bikinibottom.SocialData = {
     req.add(req.newFetchPersonRequest(ownerSpec), "owner");
     req.send(function(data) {
       if (data.hadError()) {
-        return alert("error loading owner... w000t!");
+        return console.log("error loading owner... w000t!");
       }
       
       this._owner = data.get("owner").getData();
@@ -49,7 +49,7 @@ xing.bikinibottom.SocialData = {
       req.add(req.newFetchPeopleRequest(friendsSpec, friendsParams), "friends");
       req.send(function(data) {
         if (data.hadError()) {
-          return alert("error loading friends... w000t!");
+          return console.log("error loading friends... w000t!");
         }
         
         data = data.get("friends").getData();
@@ -88,7 +88,7 @@ xing.bikinibottom.SocialData = {
     req.add(req.newFetchPersonAppDataRequest(ownerSpec, "*"), "messages");
     req.send(function(data) {
       if (data.hadError()) {
-        return alert("error retrieving messages... w000t!");
+        return console.log("error retrieving messages... w000t!");
       }
       
       messages = data.get("messages").getData();
@@ -132,7 +132,7 @@ xing.bikinibottom.SocialData = {
     req.add(req.newFetchPersonAppDataRequest(ownerSpec, "*"), "messages");
     req.send(function(data) {
       if (data.hadError()) {
-        return alert("error retrieving messages... w000t!");
+        return console.log("error retrieving messages... w000t!");
       }
       
       messages_by_sender = data.get("messages").getData();
@@ -179,7 +179,7 @@ xing.bikinibottom.SocialData = {
     req.add(req.newFetchPersonAppDataRequest(ownerSpec, "read_messages"), "read_messages");
     req.send(function(data) {
       if (data.hadError()) {
-        return alert("error retrieving read messages... w000t!");
+        return console.log("error retrieving read messages... w000t!");
       }
       
       var readMessages = data.get("read_messages").getData();
@@ -208,7 +208,7 @@ xing.bikinibottom.SocialData = {
     req.add(req.newUpdatePersonAppDataRequest(ownerSpec, "read_messages", readMessages), "read_messages");
     req.send(function(data) {
       if (data.hadError()) {
-        return alert("error saving read messages... w000t!");
+        return console.log("error saving read messages... w000t!");
       }
       
       callback();

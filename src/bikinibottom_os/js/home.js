@@ -13,16 +13,18 @@ xing.bikinibottom = xing.bikinibottom || {};
 xing.bikinibottom.Home = {
   settings: {
     MAX_ENTRIES: 4,
-    FLASH_RECORD_URL: "http://localhost:8080/bikinibottom_os/liverecord.swf?action=record",
-    FLASH_PLAY_URL: "http://localhost:8080/bikinibottom_os/liverecord.swf?action=play",
+    FLASH_VERSION: 8,
+    FLASH_URL: "http://localhost:8080/bikinibottom_os/liverecord.swf",
+    STREAM_RECORD_URL: "rmtp://bikinibottom.phillipoertel.com/bikinibottom",
+    STREAM_PLAY_URL: "rmtp://bikinibottom.phillipoertel.com/simplevideostreaming",
     FLASH_WIDTH: 303,
-    FLASH_HEIGHT: 227
+    FLASH_HEIGHT: 170
   },
   
   initialize: function(settings) {
     this._tabObj = settings.tabs;
     this._view = "home";
-    this._tabs = $w("New Inbox Outbox TextChat");
+    this._tabs = $w("New Inbox Outbox");
     
     this._initSubModules();
     this._renderTabs();
