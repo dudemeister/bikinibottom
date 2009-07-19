@@ -21,6 +21,7 @@ xing.bikinibottom.New = Class.create({
   RECIPIENT_TEMPLATE: '<option value="#{id}">#{displayName}</option>',
   PM_SUBJECT: "You received a new video message \"#{subject}\" from #{senderName}!",
   PM_BODY: "Click here to watch it: #{url}",
+  ON_PROGESS: "Loaded #{loaded} of #{total} contacts...",
   
   initialize: function(parent, settings) {
     this.parent = parent;
@@ -54,6 +55,7 @@ xing.bikinibottom.New = Class.create({
   _initElements: function() {
     this._form = $(this.ids.FORM);
     this._contactChooser = $(this.ids.CONTACT_CHOOSER);
+    this._contactChooserFirst = this._contactChooser.down();
     this._submitButton = $(this.ids.SUBMIT_BUTTON);
     this._resetButton = $(this.ids.RESET_BUTTON);
     
@@ -64,8 +66,17 @@ xing.bikinibottom.New = Class.create({
     xing.bikinibottom.SocialData.getOwner(function(owner) {
       this._owner = owner;
       
-      xing.bikinibottom.SocialData.getOwnerFriends(this._dataCallback.bind(this));
+      xing.bikinibottom.SocialData.getOwnerFriends(
+        this._dataCallback.bind(this), this._onProgress.bind(this)
+      );
     }.bind(this));
+  },
+  
+  _onProgress: function(loaded, total) {
+    this._contactChooserFirst.update(this.ON_PROGRESS.interpolate({
+      loaded: loaded,
+      total: total
+    }));
   },
   
   _dataCallback: function(friends) {
@@ -99,8 +110,8 @@ xing.bikinibottom.New = Class.create({
     this._contactChooser.insert(html.join(""));
     this._contactChooser.enable();
     // Select first entry
-    this._contactChooser.down().selected = true;
-    this._contactChooser.down().update("-- Please select [RES] --");
+    this._contactChooserFirst.selected = true;
+    this._contactChooserFirst.update("-- Please select [RES] --");
   },
   
   _observe: function() {
@@ -237,7 +248,7 @@ xing.bikinibottom.New = Class.create({
     $(this.ids.FLASH_CONTAINER, this.ids.FLASH_LABEL).invoke("hide");
     
     // reset contactChooser
-    this._contactChooser.down().selected = true;
+    this._contactChooserFirst.selected = true;
     
     this._form.subject.clear();
     this._submitButton.setValue("Add Video [RES]");

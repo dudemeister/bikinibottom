@@ -27,25 +27,36 @@ xing.bikinibottom.SocialData = {
     }.bind(this));
   },
   
-  getOwnerFriends: function(callback, forceLoading) {
+  /**
+   * Loads owners contacts in chunks of 50
+   * Maximum 400
+   */
+  getOwnerFriends: function(callback, progressCallback, forceLoading) {
     callback = callback || function() {};
+    progressCallback = progressCallback || function() {};
     
     if (this._friends && !forceLoading) {
       return callback(this._friends);
     }
-    var req, friendsSpec, index, friendsCount, data;
     
+    var req, friendsSpec, index, friendsCount, data, step, max;
+    
+    step = 50;
+    max = 400;
     index = 0;
+    
+    $(document.body).setStyle({ cursor: "wait" });
+    
     this._friends = [];
     
     var getFriends = function() {
       req = opensocial.newDataRequest();
-
+      
       friendsSpec = opensocial.newIdSpec({ userId: "OWNER", groupId: "FRIENDS" });
       friendsParams = {};
       friendsParams[opensocial.DataRequest.PeopleRequestFields.FIRST] = index;
-      friendsParams[opensocial.DataRequest.PeopleRequestFields.MAX] = 50;
-
+      friendsParams[opensocial.DataRequest.PeopleRequestFields.MAX] = step;
+      
       req.add(req.newFetchPeopleRequest(friendsSpec, friendsParams), "friends");
       req.send(function(data) {
         if (data.hadError()) {
@@ -57,19 +68,18 @@ xing.bikinibottom.SocialData = {
         
         this._friends = this._friends.concat(data.asArray());
         
-        if (this._friends.length >= friendsCount || this._friends.length >= 200) {
+        if (this._friends.length >= friendsCount || this._friends.length >= max) {
           $(document.body).setStyle({ cursor: "" });
           callback(this._friends);
         } else {
-          index += 50;
+          progressCallback(this._friends.length, friendsCount);
+          index += step;
           getFriends();
         }
       }.bind(this));
     }.bind(this);
     
     getFriends();
-    
-    $(document.body).setStyle({ cursor: "wait" });
   },
   
   // Returns all messages that belong to the owner, sorted by date
