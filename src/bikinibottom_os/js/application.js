@@ -21,7 +21,7 @@ xing.bikinibottom.New = Class.create({
   RECIPIENT_TEMPLATE: '<option value="#{id}">#{displayName}</option>',
   PM_SUBJECT: "You received a new video message \"#{subject}\" from #{senderName}!",
   PM_BODY: "Click here to watch it: #{url}",
-  ON_PROGESS: "Loaded #{loaded} of #{total} contacts...",
+  ON_PROGRESS: "Loaded #{loaded} of #{total} contacts...",
   
   initialize: function(parent, settings) {
     this.parent = parent;
