@@ -367,7 +367,7 @@ xing.bikinibottom.MessageList = Class.create({
     }
     
     i = this.messages.pluck("id").indexOf(movieId);
-    this.headline.innerHTML = this.headline.innerHTML.interpolate(this.messages[i]);
+    this.headline.innerHTML = this._headlineTemplate.interpolate(this.messages[i]);
     
     this.list.hide();
     this.messageDetail.show();
@@ -411,6 +411,8 @@ xing.bikinibottom.Inbox = Class.create(xing.bikinibottom.MessageList, {
     this.messageDetail = $(this.ids.MESSAGE_DETAIL);
     this.headline = $(this.ids.MESSAGE_HEADLINE);
     this.backButton = $(this.ids.BACK);
+    
+    this._headlineTemplate = this.headline.innerHTML;
   },
   
   getTabData: function() {
@@ -488,6 +490,8 @@ xing.bikinibottom.Outbox = Class.create(xing.bikinibottom.MessageList, {
     this.messageDetail = $(this.ids.MESSAGE_DETAIL);
     this.headline = $(this.ids.MESSAGE_HEADLINE);
     this.backButton = $(this.ids.BACK);
+    
+    this._headlineTemplate = this.headline.innerHTML;
   },
   
   getTabData: function() {
