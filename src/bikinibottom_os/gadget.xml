@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Module>
     <ModulePrefs
-            title="XING Video Messaging + Text Chat"
+            title="XING Video Messaging"
             author="Christopher Blum, Ali Jelveh, Phillip Oertel"
             author_email="christopher.blum@xing.com, ali.jelveh@xing.com, phillip.oertel@xing.com"
-            description="awesome.">
+            description="XING Hackathon Project. Allows sending of video messages to your contacts just by using a browser and a webcam. Yep, that's kick-ass.">
         <Require feature="opensocial-0.8" />
         <Require feature="views" />
         <Require feature="flash" />
@@ -38,7 +38,7 @@
       <body>
         <script type="text/javascript" charset="utf-8">
           // Unfortunately gadgets.TabsSet uses document.write
-          _tabs = new gadgets.TabSet(__MODULE_ID__);
+          var _tabs = new gadgets.TabSet(__MODULE_ID__);
           xing.bikinibottom.moduleId = __MODULE_ID__;
         </script>
         
@@ -80,9 +80,7 @@
         
         <script type="text/javascript" charset="utf-8">
           gadgets.util.registerOnLoadHandler(function() {
-            xing.bikinibottom.Home.initialize({
-              tabs: _tabs
-            });
+            xing.bikinibottom.Home.initialize({ tabs: _tabs });
           });
         </script>
       </body>
@@ -116,7 +114,7 @@
       <body>
         <script type="text/javascript" charset="utf-8">
           // Unfortunately gadgets.TabsSet uses document.write
-          _tabs = new gadgets.TabSet(__MODULE_ID__);
+          var _tabs = new gadgets.TabSet(__MODULE_ID__);
           xing.bikinibottom.moduleId = __MODULE_ID__;
         </script>
         
@@ -158,9 +156,7 @@
         
         <script type="text/javascript" charset="utf-8">
           gadgets.util.registerOnLoadHandler(function() {
-            xing.bikinibottom.Canvas.initialize({
-              tabs: _tabs
-            });
+            xing.bikinibottom.Canvas.initialize({ tabs: _tabs });
           });
         </script>
       </body>
