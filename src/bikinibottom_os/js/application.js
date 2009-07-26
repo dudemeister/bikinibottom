@@ -148,10 +148,8 @@ xing.bikinibottom.New = Class.create({
     this.currentVideoKey = this._generateKey();
     
     if (gadgets.flash.getMajorVersion() >= this.settings.FLASH_VERSION) {
-      url = this.settings.FLASH_URL
-        + "?action=record"
-        + "&videoId=" + this.currentVideoKey
-        + "&recordUrl=" + encodeURIComponent(this.settings.STREAM_RECORD_URL);
+      url = this.settings.FLASH_URL + "?" + this._getVideoParams(this.currentVideoKey);
+      
       gadgets.flash.embedFlash(
         url,
         this.ids.FLASH_CONTAINER,
@@ -173,6 +171,19 @@ xing.bikinibottom.New = Class.create({
     this.videoAdded = true;
     this._disableForm();
     this._submitButton.setValue("waiting for video... [RES]");
+  },
+  
+  _getVideoParams: function(id) {
+    var methodName = "__flashCallback";
+    window[methodName] = this._videoAddedCallback.bind(this);
+    
+    return Object.toQueryString({
+      action: "record",
+      videoId: id,
+      recordUrl: this.settings.STREAM_RECORD_URL,
+      playUrl: this.settings.STREAM_PLAY_URL,
+      callback: methodName
+    });
   },
   
   _videoAddedCallback: function() {
@@ -318,12 +329,30 @@ xing.bikinibottom.MessageList = Class.create({
       messages: html
     });
     
-    // observer links of messages
+    // observe links of messages
     this._observeMessagesLinks();
     
     gadgets.window.adjustHeight();
+  },
+  
+  _loadUserData: function(messages, userType) {
+    var userIds, messageThumbnails, userData;
     
-    // TODO lazy load thumbnail urls and profile urls and bin them with the message recipients
+    userIds = messages.pluck(userType);
+    messageThumbnails = this.list.select("img.thumbnail");
+    
+    xing.bikinibottom.SocialData.getUserDetails(userIds.uniq().without("test.test"), function(data) {
+      userIds.each(function(userId, index) {
+        userData = data[userId];
+        if (userData) {
+          var profileUrl = userData.profileUrl;
+          messageThumbnails[index].src = userData.thumbnailUrl;
+          messageThumbnails[index].observe("click", function() {
+            parent.location = profileUrl;
+          });
+        }
+      });
+    });
   },
   
   _observeMessagesLinks: function() {
@@ -349,10 +378,7 @@ xing.bikinibottom.MessageList = Class.create({
     var i, url;
     
     if (gadgets.flash.getMajorVersion() >= this.settings.FLASH_VERSION) {
-      url = this.settings.FLASH_URL
-        + "?action=play"
-        + "&videoId=" + movieId
-        + "&playUrl=" + encodeURIComponent(this.settings.STREAM_PLAY_URL);
+      url = this.settings.FLASH_URL + "?" + this._getVideoParams(movieId);
       
       gadgets.flash.embedFlash(
         url,
@@ -373,6 +399,14 @@ xing.bikinibottom.MessageList = Class.create({
     this.messageDetail.show();
     
     gadgets.window.adjustHeight();
+  },
+  
+  _getVideoParams: function(id) {
+    return Object.toQueryString({
+      action: "play",
+      videoId: id,
+      playUrl: this.settings.STREAM_PLAY_URL
+    });
   }
 });
 
@@ -399,7 +433,7 @@ xing.bikinibottom.Inbox = Class.create(xing.bikinibottom.MessageList, {
   },
   
   HINT: "You haven't received any messages yet. [RES]",
-  INBOX_MESSAGE_TEMPLATE: '<li><a href="##{id}" class="unread">#{subject}</a>From: #{senderName} (#{date})</li>', // [RES]
+  INBOX_MESSAGE_TEMPLATE: '<li><img src="https://www.xing.com/img/users/nobody_m_s2.gif" width="30" height="40" class="thumbnail" /><a href="##{id}" class="unread">#{subject}</a>From: #{senderName} (#{date})</li>', // [RES]
   DELIMITER: "-|--|-",
   
   initialize: function($super, parent, settings) {
@@ -428,6 +462,7 @@ xing.bikinibottom.Inbox = Class.create(xing.bikinibottom.MessageList, {
     xing.bikinibottom.SocialData.getReceivedMessages(function(messages) {
       this._renderMessages(messages);
       this._markUnReadMessages();
+      this._loadUserData(messages, "sender");
     }.bind(this), true);
   },
   
@@ -479,7 +514,7 @@ xing.bikinibottom.Outbox = Class.create(xing.bikinibottom.MessageList, {
   },
   
   HINT: "You haven't sent any messages yet. [RES]",
-  OUTBOX_MESSAGE_TEMPLATE: '<li><a href="##{id}">#{subject}</a>To: #{recipientName} (#{date})</li>', // [RES]
+  OUTBOX_MESSAGE_TEMPLATE: '<li><img src="https://www.xing.com/img/users/nobody_m_s2.gif" width="30" height="40" class="thumbnail" /><a href="##{id}">#{subject}</a>To: #{recipientName} (#{date})</li>', // [RES]
   
   initialize: function($super, parent, settings) {
     $super(settings);
@@ -504,7 +539,10 @@ xing.bikinibottom.Outbox = Class.create(xing.bikinibottom.MessageList, {
   },
   
   _loadMessages: function() {
-    xing.bikinibottom.SocialData.getSentMessages(this._renderMessages.bind(this), true);
+    xing.bikinibottom.SocialData.getSentMessages(function(messages) {
+      this._renderMessages(messages);
+      this._loadUserData(messages, "recipient");
+    }.bind(this), true);
   },
   
   _getMessageEntry: function(messageObj) {

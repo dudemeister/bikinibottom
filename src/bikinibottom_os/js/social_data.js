@@ -7,7 +7,7 @@ xing.bikinibottom.SocialData = {
   getOwner: function(callback, forceLoading) {
     callback = callback || function() {};
     
-    if (this._friends && !forceLoading) {
+    if (this._owner && !forceLoading) {
       return callback(this._owner);
     }
     
@@ -193,7 +193,7 @@ xing.bikinibottom.SocialData = {
       }
       
       var readMessages = data.get("read_messages").getData();
-      xing.bikinibottom.SocialData.getOwner(function(owner) {
+      this.getOwner(function(owner) {
         readMessages = readMessages[owner.getId()];
         if (readMessages) {
           readMessages = readMessages["read_messages"];
@@ -241,5 +241,44 @@ xing.bikinibottom.SocialData = {
     
     // Ok, send!
     opensocial.requestSendMessage(recipient, message, callback);
+  },
+  
+  getUserDetails: function(ids, callback, forceLoading) {
+    var req, cacheKey, photoUrls, userData, params;
+    
+    callback = callback || function() {};
+    
+    cacheKey = ids.join();
+    this._photoUrls = this._photoUrls || {};
+    if (this._photoUrls[cacheKey] && !forceLoading) {
+      return callback(this._photoUrls[cacheKey]);
+    }
+    
+    req = opensocial.newDataRequest();
+    ids.each(function(id) {
+      params = {};
+      params[opensocial.DataRequest.PeopleRequestFields.PROFILE_DETAILS] = [opensocial.Person.Field.PROFILE_URL];
+      req.add(req.newFetchPersonRequest(id), id);
+    });
+    
+    if (ids.size() > 0) {
+      req.send(function(data) {
+        if (data.hadError()) {
+          return console.log("error retrieving photo urls... w000t!");
+        }
+
+        photoUrls = {};
+        ids.each(function(id) {
+          userData = data.get(id).getData();
+          photoUrls[id] = {
+            thumbnailUrl: userData.getField("thumbnailUrl"),
+            profileUrl: userData.getField("profileUrl")
+          };
+        });
+        this._photoUrls[cacheKey] = photoUrls;
+
+        callback(photoUrls);
+      }.bind(this));
+    }
   }
 };

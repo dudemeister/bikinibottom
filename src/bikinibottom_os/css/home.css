@@ -45,8 +45,15 @@ ul li {
   border-bottom: 1px solid #D8D8D8;
   margin: 0 0 2px;
   overflow: hidden;
-  padding: 0 5px 2px 8px;
-  font-size: 11px;
+  padding: 0 5px 2px 45px;
+  font-size: 10px;
+  position: relative;
+}
+
+ul li img {
+  position: absolute;
+  left: 5px;
+  cursor: pointer;
 }
 
 ul li:last-child {

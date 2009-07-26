@@ -45,12 +45,19 @@ ul li {
   border-bottom: 1px solid #D8D8D8;
   margin: 0 0 2px;
   overflow: hidden;
-  padding: 0 5px 2px 8px;
+  padding: 0 5px 2px 45px;
   font-size: 11px;
+  position: relative;
 }
 
 ul li:last-child {
   border-bottom: 0 none;
+}
+
+ul li img {
+  position: absolute;
+  left: 5px;
+  cursor: pointer;
 }
 
 ul li a {
