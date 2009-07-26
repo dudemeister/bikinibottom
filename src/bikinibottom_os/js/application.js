@@ -157,7 +157,8 @@ xing.bikinibottom.New = Class.create({
           width: this.settings.FLASH_WIDTH,
           height: this.settings.FLASH_HEIGHT,
           swliveconnect: true,
-          allowscriptaccess: "always"
+          allowscriptaccess: "always",
+          wmode: "window" // Important to make the security dialog better clickable
         }
       );
     }
