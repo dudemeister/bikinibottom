@@ -128,7 +128,7 @@ xing.bikinibottom.New = Class.create({
   },
   
   _addVideo: function() {
-    var msg, url;
+    var msg, url, embedFlash;
     
     // this needs to be generated here, since we're calling the flash with these params
     this._formData = this._form.serialize(true);
@@ -150,7 +150,7 @@ xing.bikinibottom.New = Class.create({
     if (gadgets.flash.getMajorVersion() >= this.settings.FLASH_VERSION) {
       url = this.settings.FLASH_URL + "?" + this._getVideoParams(this.currentVideoKey);
       
-      gadgets.flash.embedFlash(
+      embedFlash = gadgets.flash.embedFlash(
         url,
         this.ids.FLASH_CONTAINER,
         this.settings.FLASH_VERSION, {
@@ -161,6 +161,10 @@ xing.bikinibottom.New = Class.create({
           wmode: "window" // Important to make the security dialog better clickable
         }
       );
+      
+      try {
+        embedFlash && $(this.ids.FLASH_CONTAINER).down().focus();
+      } catch(e) {}
     }
     
     // Show elements
