@@ -162,10 +162,12 @@ xing.bikinibottom.New = Class.create({
         }
       );
       
-      try {
-        document.body.focus();
-        embedFlash && $(this.ids.FLASH_CONTAINER).down().focus();
-      } catch(e) {}
+      (function() {
+        try {
+          document.body.focus();
+          embedFlash && $(this.ids.FLASH_CONTAINER).down().focus();
+        } catch(e) {}
+      }).bind(this).delay(0.1);
     }
     
     // Show elements
