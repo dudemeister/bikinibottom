@@ -336,7 +336,7 @@ xing.bikinibottom.MessageList = Class.create({
   },
   
   _loadUserData: function(messages, userType) {
-    var userIds, messageThumbnails, userData;
+    var userIds, messageThumbnails, userData, messageThumbnail;
     
     userIds = messages.pluck(userType);
     messageThumbnails = this.list.select("img.thumbnail");
@@ -346,10 +346,14 @@ xing.bikinibottom.MessageList = Class.create({
         userData = data[userId];
         if (userData) {
           var profileUrl = userData.profileUrl;
-          messageThumbnails[index].src = userData.thumbnailUrl;
-          messageThumbnails[index].observe("click", function() {
-            parent.location = profileUrl;
-          });
+          
+          messageThumbnail = messageThumbnails[index];
+          if (messageThumbnail) {
+            messageThumbnail.src = userData.thumbnailUrl;
+            messageThumbnail.observe("click", function() {
+              parent.location = profileUrl;
+            });
+          }
         }
       });
     });
