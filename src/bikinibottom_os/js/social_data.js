@@ -258,7 +258,7 @@ xing.bikinibottom.SocialData = {
     ids.each(function(id) {
       params = {};
       params[opensocial.DataRequest.PeopleRequestFields.PROFILE_DETAILS] = [opensocial.Person.Field.PROFILE_URL];
-      req.add(req.newFetchPersonRequest(id), id);
+      req.add(req.newFetchPersonRequest(id, params), id);
     });
     
     if (ids.size() > 0) {

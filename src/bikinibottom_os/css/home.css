@@ -48,6 +48,7 @@ ul li {
   padding: 0 5px 2px 45px;
   font-size: 10px;
   position: relative;
+  min-height: 40px;
 }
 
 ul li img {

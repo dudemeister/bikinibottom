@@ -341,7 +341,7 @@ xing.bikinibottom.MessageList = Class.create({
     userIds = messages.pluck(userType);
     messageThumbnails = this.list.select("img.thumbnail");
     
-    xing.bikinibottom.SocialData.getUserDetails(userIds.uniq().without("test.test"), function(data) {
+    xing.bikinibottom.SocialData.getUserDetails(userIds.uniq().compact().without("test.test"), function(data) {
       userIds.each(function(userId, index) {
         userData = data[userId];
         if (userData) {
