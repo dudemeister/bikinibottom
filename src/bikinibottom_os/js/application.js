@@ -163,8 +163,7 @@ xing.bikinibottom.New = Class.create({
       );
       
       try {
-        // Set focus on swf
-        this._submitButton.blur();
+        document.body.focus();
         embedFlash && $(this.ids.FLASH_CONTAINER).down().focus();
       } catch(e) {}
     }
