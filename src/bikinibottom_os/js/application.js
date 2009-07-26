@@ -161,13 +161,6 @@ xing.bikinibottom.New = Class.create({
           wmode: "window" // Important to make the security dialog better clickable
         }
       );
-      
-      (function() {
-        try {
-          document.body.focus();
-          embedFlash && $(this.ids.FLASH_CONTAINER).down().focus();
-        } catch(e) {}
-      }).bind(this).delay(1);
     }
     
     // Show elements
