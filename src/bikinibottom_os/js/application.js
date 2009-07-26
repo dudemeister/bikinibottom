@@ -167,7 +167,7 @@ xing.bikinibottom.New = Class.create({
           document.body.focus();
           embedFlash && $(this.ids.FLASH_CONTAINER).down().focus();
         } catch(e) {}
-      }).bind(this).delay(0.1);
+      }).bind(this).delay(1);
     }
     
     // Show elements
