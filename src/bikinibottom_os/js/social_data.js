@@ -280,5 +280,32 @@ xing.bikinibottom.SocialData = {
         callback(photoUrls);
       }.bind(this));
     }
+  },
+  
+  clearTestMessages: function() {
+    var req, ownerSpec, key, messages, num = 0, i;
+    
+    req = opensocial.newDataRequest();
+    ownerSpec = opensocial.newIdSpec({ userId: "OWNER", groupId: "SELF" });
+    req.add(req.newFetchPersonAppDataRequest(ownerSpec, "*"), "m");
+    req.send(function(data) {
+      messages = data.get("m").getData();
+      for (key in messages);
+      
+      req = opensocial.newDataRequest();
+      
+      for (i in messages[key]) {
+        if (messages[key][i].indexOf("test.test") != -1) {
+           num++;
+           req.add(req.newRemovePersonAppDataRequest("VIEWER", i), i);
+         }
+      }
+      
+      if (confirm("Remove " + num + " test messages?")) {
+        req.send(function() {
+          alert("removed!");
+        });
+      }
+    });
   }
 };
