@@ -4,7 +4,7 @@
             title="XING Video Messaging"
             author="Christopher Blum, Ali Jelveh, Phillip Oertel"
             author_email="christopher.blum@xing.com, ali.jelveh@xing.com, phillip.oertel@xing.com"
-            description="XING Hackathon Project. Allows sending of video messages to your contacts just by using a browser and a webcam. Yep, that's kick-ass.">
+            description="XING Hackathon Project. Allows sending of video messages to your contacts just by using a browser and a webcam. Yep, that's kick-ass. Please note: The application is at this time only visible to XING employees and partners.">
         <Require feature="opensocial-0.8" />
         <Require feature="views" />
         <Require feature="flash" />
