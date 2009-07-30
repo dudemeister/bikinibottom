@@ -66,6 +66,18 @@ label {
   color: #fff;
 }
 
+.back-link-container {
+  float: left;
+}
+
 .back-link {
+  color: #333;
+}
+
+.reply-link-container {
+  float: right;
+}
+
+.reply-link {
   color: #333;
 }

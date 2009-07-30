@@ -87,6 +87,12 @@ xing.bikinibottom.New = Class.create({
     this._enableForm();
   },
   
+  setViewParams: function(params) {
+  	for(var i in params) {
+  		this[i] = params[i];
+  	}
+  },
+  
   _renderRecipients: function() {
     var optionHtml, html, potentialRecipients;
     
@@ -312,6 +318,8 @@ xing.bikinibottom.MessageList = Class.create({
     
     this._tabLoaded = true;
     this._observeBackButton();
+    // this only happens when 
+    this._observeReplyButton();
   },
   
   _renderMessages: function(messages) {
@@ -374,6 +382,17 @@ xing.bikinibottom.MessageList = Class.create({
     }.bind(this));
   },
   
+  _observeReplyButton: function() {
+  	if(this.replyButton) {
+  		this.replyButton.observe("click", function(event){
+  			debugger;
+        xing.bikinibottom.New._loadTab();
+        // gadgets.window.adjustHeight();
+        event.stop();
+      }.bind(this));
+  	}
+  },
+  
   _showMessages: function() {
     this.list.show();
     this.messageDetail.hide();
@@ -430,7 +449,8 @@ xing.bikinibottom.Inbox = Class.create(xing.bikinibottom.MessageList, {
     LIST: "inbox-list",
     BACK: "inbox-flash-payer-back",
     MESSAGE_HEADLINE: "inbox-flash-player-label",
-    MESSAGE_DETAIL: "inbox-message-player"
+    MESSAGE_DETAIL: "inbox-message-player",
+    REPLY: "inbox-reply-link"
   },
   
   classNames: {
@@ -450,6 +470,7 @@ xing.bikinibottom.Inbox = Class.create(xing.bikinibottom.MessageList, {
     this.messageDetail = $(this.ids.MESSAGE_DETAIL);
     this.headline = $(this.ids.MESSAGE_HEADLINE);
     this.backButton = $(this.ids.BACK);
+    this.replyButton = $(this.ids.REPLY);
     
     this._headlineTemplate = this.headline.innerHTML;
   },

@@ -61,8 +61,11 @@
           <div id="inbox-message-player" style="display: none;">
             <h3 id="inbox-flash-player-label">#{subject} <br /><span>(#{senderName}, #{date})</span></h3>
             <div id="inbox-flash-player">You need at least flash player version 8 to record a video. Get it <a href="http://get.adobe.com/de/flashplayer/" target="_blank">here</a>. [RES]</div>
-            <div>
+            <div class="back-link-container">
               &laquo; <a id="inbox-flash-payer-back" class="back-link" href="#">back [RES]</a>
+            </div>
+            <div class="reply-link-container">
+              <a id="inbox-reply-link" class="reply-link" href="#">reply [RES]</a> &raquo;
             </div>
           </div>
         </div>
