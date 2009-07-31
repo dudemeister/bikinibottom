@@ -95,6 +95,7 @@ xing.bikinibottom.New = Class.create({
       id: params.recipient
     });
     this._contactChooser.insert({'bottom': optionHtml});
+    this._resetTemporaryRecipient();
     this.temporaryRecipient = this._contactChooser.childElements().last();    
     this._form.recipient.value = params.recipient;
     this._form.subject.value = "RE: " + params.subject;
@@ -277,12 +278,18 @@ xing.bikinibottom.New = Class.create({
     
     xing.bikinibottom.SocialData.sendPrivateMessage(this._formData.recipient, subject, body);
   },
-  
-  _resetVideoForm: function() {
-    if(this.temporaryRecipient) {
+
+  _resetTemporaryRecipient: function() {
+  	if(this.temporaryRecipient) {      
       this.temporaryRecipient.remove();
       this.temporaryRecipient = undefined;
     }
+  	
+  },
+  
+  _resetVideoForm: function() {
+    
+    this._resetTemporaryRecipient();
     
     this.videoAdded = false;
     
