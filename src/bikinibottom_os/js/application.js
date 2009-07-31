@@ -129,7 +129,8 @@ xing.bikinibottom.New = Class.create({
     this._contactChooserFirst.update("-- Please select [RES] --");
     
     if(this.replyMode) {
-      return;
+    	this.temporaryRecipient.selected = true;
+    	return;
     }
     
     this._contactChooser.enable();
@@ -236,10 +237,6 @@ xing.bikinibottom.New = Class.create({
     req.send(this._submitCallback.bind(this));
     // after sending reset the reply Mode
     this.replyMode = false;
-    if(this.temporaryRecipient) {
-    	this.temporaryRecipient.remove();
-    	this.temporaryRecipient = undefined;
-    }
   },
   
   _submitCallback: function(data) {
@@ -282,6 +279,11 @@ xing.bikinibottom.New = Class.create({
   },
   
   _resetVideoForm: function() {
+    if(this.temporaryRecipient) {
+      this.temporaryRecipient.remove();
+      this.temporaryRecipient = undefined;
+    }
+    
     this.videoAdded = false;
     
     // remove the flash video
