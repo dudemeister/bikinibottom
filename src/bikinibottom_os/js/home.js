@@ -47,9 +47,10 @@ xing.bikinibottom.Home = {
   
   goToTab: function(tabName, params)  {
   	var tabIndex = this._tabs.indexOf(tabName);
-  	if(params) {
+  	this._submodules[tabName].replyMode = true;
+    this._tabObj.setSelectedTab(tabIndex);
+  	if(params && this._submodules[tabName].setViewParams) {
   		this._submodules[tabName].setViewParams(params);
   	}
-  	this._tabObj.setSelectedTab(tabIndex);
   }
 };

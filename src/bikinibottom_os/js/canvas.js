@@ -43,6 +43,15 @@ xing.bikinibottom.Canvas = {
     }
   },
   
+  goToTab: function(tabName, params)  {
+    var tabIndex = this._tabs.indexOf(tabName);
+    this._submodules[tabName].replyMode = true;
+    this._tabObj.setSelectedTab(tabIndex);
+    if(params && this._submodules[tabName].setViewParams) {
+      this._submodules[tabName].setViewParams(params);
+    }
+  },
+  
   _initSubModules: function() {
     this._submodules = {};
     this._tabs.each(function(moduleName) {

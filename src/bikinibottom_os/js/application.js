@@ -58,7 +58,7 @@ xing.bikinibottom.New = Class.create({
     this._contactChooserFirst = this._contactChooser.down();
     this._submitButton = $(this.ids.SUBMIT_BUTTON);
     this._resetButton = $(this.ids.RESET_BUTTON);
-    
+
     this._disableForm();
   },
   
@@ -84,14 +84,25 @@ xing.bikinibottom.New = Class.create({
     
     this._renderRecipients();
     
-    this._enableForm();
+    if(!this.replyMode) {
+    	this._enableForm();
+    }
   },
   
   setViewParams: function(params) {
-  	for(var i in params) {
-  		this[i] = params[i];
-  	}
-  },
+  	var optionHtml = this.RECIPIENT_TEMPLATE.interpolate({
+      displayName: params.recipientName,
+      id: params.recipient
+    });
+    this._contactChooser.insert({'bottom': optionHtml});
+    this.temporaryRecipient = this._contactChooser.childElements().last();    
+    this._form.recipient.value = params.recipient;
+    this._form.subject.value = "RE: " + params.subject;
+
+    this._contactChooser.enable();
+           
+  	this._addVideo();
+  	},
   
   _renderRecipients: function() {
     var optionHtml, html, potentialRecipients;
@@ -114,10 +125,17 @@ xing.bikinibottom.New = Class.create({
     }.bind(this));
     
     this._contactChooser.insert(html.join(""));
+    
+    this._contactChooserFirst.update("-- Please select [RES] --");
+    
+    if(this.replyMode) {
+      return;
+    }
+    
     this._contactChooser.enable();
     // Select first entry
     this._contactChooserFirst.selected = true;
-    this._contactChooserFirst.update("-- Please select [RES] --");
+
   },
   
   _observe: function() {
@@ -138,7 +156,6 @@ xing.bikinibottom.New = Class.create({
     
     // this needs to be generated here, since we're calling the flash with these params
     this._formData = this._form.serialize(true);
-    
     if (!this._formData.recipient) {
       msg = new gadgets.MiniMessage(xing.bikinibottom.moduleId);
       msgElem = msg.createTimerMessage(
@@ -217,6 +234,12 @@ xing.bikinibottom.New = Class.create({
     recipientSpec = "VIEWER";
     req.add(req.newUpdatePersonAppDataRequest(recipientSpec, this.currentVideoKey, gadgets.json.stringify(value)), "message_saving");
     req.send(this._submitCallback.bind(this));
+    // after sending reset the reply Mode
+    this.replyMode = false;
+    if(this.temporaryRecipient) {
+    	this.temporaryRecipient.remove();
+    	this.temporaryRecipient = undefined;
+    }
   },
   
   _submitCallback: function(data) {
@@ -385,9 +408,8 @@ xing.bikinibottom.MessageList = Class.create({
   _observeReplyButton: function() {
   	if(this.replyButton) {
   		this.replyButton.observe("click", function(event){
-  			debugger;
-        xing.bikinibottom.New._loadTab();
-        // gadgets.window.adjustHeight();
+  			var message = this.currentMessage;
+  			this.parent.goToTab('New', {"recipient": message.sender, "subject": message.subject, "recipientName": message.senderName});
         event.stop();
       }.bind(this));
   	}
@@ -417,8 +439,9 @@ xing.bikinibottom.MessageList = Class.create({
     }
     
     i = this.messages.pluck("id").indexOf(movieId);
-    this.headline.innerHTML = this._headlineTemplate.interpolate(this.messages[i]);
-    
+    this.currentMessage = this.messages[i]; 
+    this.headline.innerHTML = this._headlineTemplate.interpolate(this.currentMessage);
+        
     this.list.hide();
     this.messageDetail.show();
     
